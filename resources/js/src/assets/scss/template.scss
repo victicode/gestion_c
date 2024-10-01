@@ -1,0 +1,60 @@
+$primary   : #0449fb;
+$secondary : #0185ff;
+$accent    : #9C27B0;
+
+$dark      : #3b3b3b;
+$dark-page : #121212;
+
+$positive  : #21BA45;
+$negative  : #C10015;
+$info      : #31CCEC;
+$warning   : #F2C037;
+
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400..800&family=Baloo+Bhaina+2:wght@400..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Baloo+Bhaina+2:wght@400..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+*,p, div, span, section,  .text-subtitle2, .text-caption, .text-body1, .text-body2, .text-subtitle1 {
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+  font-style: normal;
+}
+* {
+  box-sizing: border-box;
+}
+#app, #App{
+  scroll-behavior: smooth!important;
+}
+html{
+  scroll-behavior: smooth;
+}
+.px-0 {
+  padding-right: 0px;
+  padding-left: 0px;
+}
+.py-0 {
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+.mb-0{
+  margin-bottom: 0px;
+}
+.w-100{
+  width: 100%;
+}
+.w-70{
+  width: 70%;
+}
+.w-50{
+  width: 50%;
+}
+.w-40{
+  width: 40%;    
+}
+.text-center {
+  text-align: center;
+}
+.text-white {
+  color: #fff;
+}
