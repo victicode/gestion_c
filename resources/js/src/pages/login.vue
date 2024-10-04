@@ -9,16 +9,15 @@
         <n-card style="" class="loginPage px-0 w-100" >
           <n-form ref="formRef" :model="user" :rules="rules">
             <n-form-item path="user" label="Usuario" style="margin-bottom: 0.5rem; margin-top: 0.8rem;">
-              <n-input v-model:value="user.user" type="text" placeholder="Usuario" >
-              </n-input>
+              <n-input v-model:value="user.user" type="text" placeholder="Usuario" clearable />
             </n-form-item>
             <n-form-item path="password" label="Contraseña">
               <n-input
                 type="password"
                 show-password-on="click"
                 placeholder="Contraseña"
+                clearable
                 v-model:value="user.password"
-                @input="handlePasswordInput"
                 @keydown.enter.prevent
               >
                 <template #password-visible-icon>
@@ -30,6 +29,7 @@
               </n-input>
 
             </n-form-item>
+            <n-checkbox size="large" label="Recuerdame" :model="reme" :checked-value="true"/>
             <n-row :gutter="[0, 24]">
               <n-col :span="24">
                 <div style="display: flex; justify-content: flex-end">
@@ -65,22 +65,18 @@
 import { defineComponent, ref } from "vue";
 import { useMessage } from "naive-ui";
 import { EyeOutline, EyeOffOutline } from '@vicons/ionicons5'
-
+import { useAuthStore } from "@/services/store/auth.store";
 export default defineComponent({
   setup() {
     const formRef = ref(null);
-    const rPasswordFormItemRef = ref(null);
     const message = useMessage();
+    const authStore = useAuthStore()
+    const reme = ref(false)
     const user = ref({
       user: null,
       password: null,
     });
-    function validatePasswordStartWith(rule, value) {
-      return !!modelRef.value.password && modelRef.value.password.startsWith(value) && modelRef.value.password.length >= value.length;
-    }
-    function validatePasswordSame(rule, value) {
-      return value === modelRef.value.password;
-    }
+
     const rules = {
       user: [
         {
@@ -92,34 +88,24 @@ export default defineComponent({
       password: [
         {
           required: true,
-          message: "Contraseña es requerida"
+          message: "Contraseña es requerida",
+          trigger: ["input", "blur"]
         }
       ],
     };
+    const handleValidateButtonClick = (e) =>  {
+      e.preventDefault();
+      formRef.value?.validate();
+    }
+
     return {
       formRef,
       user,
+      reme,
       rules,
       EyeOutline,
       EyeOffOutline,
-      handlePasswordInput() {
-        if (modelRef.value.reenteredPassword) {
-          rPasswordFormItemRef.value?.validate({ trigger: "password-input" });
-        }
-      },
-      handleValidateButtonClick(e) {
-        e.preventDefault();
-        formRef.value?.validate(
-          (errors) => {
-            if (!errors) {
-              message.success("Valid");
-            } else {
-              console.log(errors);
-              message.error("Invalid");
-            }
-          }
-        );
-      }
+      handleValidateButtonClick
     };
   }
 });
