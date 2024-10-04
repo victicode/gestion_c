@@ -14,18 +14,18 @@ export const useAuthStore = defineStore("auth", {
     setAuth(user){
       this.isAuthenticated = true;
       this.errors = {};
-      this.setUser(user.data.user)
-      this.setIsAdmin(user.data.user)
+      this.setUser(user.data)
+      this.setIsAdmin(user.data)
     },
     setUser(user){
       this.user = user;
     },
     setIsAdmin(user){
-      storage.setItem("is_admin",  user.rol_id !== '3' ? true : false);
+      storage.setItem("is_admin",  user.rol_id);
       storage.setItem("user_unique_id",user.id);
     },
-    setRememberAccount({dni, password, remember}){
-      storage.setItem("rememberUser", dni);
+    setRememberAccount({email, password, remember}){
+      storage.setItem("rememberUser", email);
       storage.setItem("rememberPassword", password);
       storage.setItem("isRemember", remember);
     },
@@ -48,25 +48,26 @@ export const useAuthStore = defineStore("auth", {
     },
     async login(credentials) {
       this.preLogin(credentials)
-      return await new Promise((resolve) => {
-        ApiService.post("api/auth/login", credentials)
+      return await new Promise((resolve, reject) => {
+        ApiService.post("/api/auth/login", credentials)
           .then(({ data }) => {
-            if(!data.data.access_token){
-              throw data;
-            }
+            if(!data.data.access_token) throw data;
+            
             JwtService.saveToken(data.data.access_token);
             if (JwtService.getToken()) {
               ApiService.setHeader();
               ApiService.get("api/user")
-                .then( ( dataUser ) => {
-                  this.setAuth(dataUser.data)
-                  resolve(dataUser.data);
-                })
+              .then((dataUser) => {
+                if(dataUser.code !== 200) throw dataUser
+                this.setAuth(dataUser.data)
+                resolve(dataUser.data);
+              }).catch( (response) => {
+                resolve(response);
+              })
             }
           })
           .catch(({ response }) => {
-            // console.log(response.data.error)
-            resolve(response ? response.data.error : {});
+            reject(response ? response.data.error : {});
           });
       })
     },

@@ -1,12 +1,12 @@
 <template>
-  <section id="loginPage">
+  <section id="sistemPage">
     <div />
     <div class="w-100">
       <div class="w-40" style="margin: auto;">
         <div class="header_form w-100" >
           <n-h1 class="mb-0 text-center text-white">Gestión de cola SIAMTEL</n-h1>
         </div>
-        <n-card style="" class="loginPage px-0 w-100" >
+        <n-card style="" class="sistem-page px-0 w-100" >
           <n-form ref="formRef" :model="user" :rules="rules">
             <n-form-item path="user" label="Usuario" style="margin-bottom: 0.5rem; margin-top: 0.8rem;">
               <n-input v-model:value="user.user" type="text" placeholder="Usuario" clearable />
@@ -29,15 +29,15 @@
               </n-input>
 
             </n-form-item>
-            <n-checkbox size="large" label="Recuerdame" :model="reme" :checked-value="true"/>
+            <n-checkbox size="large" label="Recuerdame" v-model:checked="remember" style="margin-bottom:12px"/>
             <n-row :gutter="[0, 24]">
               <n-col :span="24">
                 <div style="display: flex; justify-content: flex-end">
                   <n-button
-                    :disabled="user.age === null"
                     round
                     type="primary"
-                    @click="handleValidateButtonClick"
+                    :loading="loading"
+                    @click="handleValidateButtonClick($event)"
                   >
                     Ingresar
                   </n-button>
@@ -66,17 +66,21 @@ import { defineComponent, ref } from "vue";
 import { useMessage } from "naive-ui";
 import { EyeOutline, EyeOffOutline } from '@vicons/ionicons5'
 import { useAuthStore } from "@/services/store/auth.store";
+import storage from "@/services/storage";
+import { useRouter } from "vue-router";
+
 export default defineComponent({
   setup() {
     const formRef = ref(null);
     const message = useMessage();
     const authStore = useAuthStore()
-    const reme = ref(false)
+    const router = useRouter()
+    const remember = ref(storage.getItem('isRemember') === 'true' ?? false)
     const user = ref({
-      user: null,
-      password: null,
+      user: storage.getItem('rememberUser') ?? '',
+      password: storage.getItem('rememberPassword') ?? '',
     });
-
+    const loading = ref(false)
     const rules = {
       user: [
         {
@@ -95,14 +99,44 @@ export default defineComponent({
     };
     const handleValidateButtonClick = (e) =>  {
       e.preventDefault();
-      formRef.value?.validate();
+      formRef.value?.validate((errors) => {
+          if (!errors) {
+            login()
+          } else {
+            message.error("Debes completar el formulario");
+          }
+        });
     }
-
+    const login = () => {
+      loading.value = true
+      const data = {
+        email: user.value.user,
+        password: user.value.password,
+        remember: remember.value
+      }
+      authStore.login(data)
+      .then((response) => {
+        message.success('Incio de sesión correcto!');
+        setTimeout(() => {            
+          response.data.rol_id == 1 
+          ? router.push('/admin')
+          : response.data.rol_id == 2 
+          ? router.push('/counter')
+          : router.push('/host')
+          
+        }, 1000);
+      })
+      .catch((response) => {
+        message.error(response.message);
+        loading.value = false
+      })
+    }
     return {
       formRef,
       user,
-      reme,
+      remember,
       rules,
+      loading,
       EyeOutline,
       EyeOffOutline,
       handleValidateButtonClick
@@ -124,48 +158,7 @@ export default defineComponent({
   .n-input {
     padding: 7px;
   }
-  #loginPage{
-    display: flex;
-    justify-content: space-between;
-    flex-direction: column;
-    align-items: center;
-    height: 100%;
-    background: #05A952 !important;
-    &::before{
-      background-image: url('https://siamtel.lara.gob.ve/fundacion-siamtel/sistema-siamtel/assets/imagenes/logo/logo.svg');
-      content: '';
-      position: absolute;
-      z-index: 0;
-      background-repeat: no-repeat;
-      opacity: 0.04;
-      width: 100%;
-      height: 100%;
-    }
 
-  }
-  .loginPage {
-    border-top-left-radius: 0px;
-    border-top-right-radius: 0px;
-    border-bottom-left-radius: 30px;
-    border-bottom-right-radius: 30px;
-    border: 0px;
-    box-shadow: #00000061 0px 7px 5px 0px;
-  }
-  @media screen and (max-width: 780px){
-    .loginPage{
-      width: 100%;
-      margin: auto;
-      height: 100%;
-      border-radius: 0px;
-      border: 0px;
 
-      & .n-card__content{
-        border: 0px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-      }
-    }
-  }
 
 </style>

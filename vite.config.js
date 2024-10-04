@@ -4,6 +4,13 @@ import vue from '@vitejs/plugin-vue';
 import AutoImport from 'unplugin-auto-import/vite'
 
 export default defineConfig({
+    css: {
+        preprocessorOptions: {
+          scss: {
+            additionalData: `@import './resources/js/src/assets/scss/variables.scss';`
+          }
+        }
+      },
     plugins: [
         vue({
             template: {
