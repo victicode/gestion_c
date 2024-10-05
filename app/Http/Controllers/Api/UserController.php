@@ -31,7 +31,7 @@ class UserController extends Controller
                 'email' => $request->email,
                 'name' => $request->name,
                 'password' => bcrypt($request->password),
-                'rol_id' => $request->rol ?? 1,
+                'rol_id' => $request->rol ?? 3,
             ]);
 		} catch (Exception $e) {
 			return $this->returnFail(505,['message'=> $e->getMessage()]);

@@ -13,7 +13,12 @@ return new class extends Migration
     {
         Schema::create('departaments', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->integer('type');
+            $table->integer('correlativo');
+            $table->integer('limit');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
