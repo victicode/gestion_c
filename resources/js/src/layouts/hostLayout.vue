@@ -1,9 +1,9 @@
 <template>
   <section id="sistemPage">
-    <div style="height: 10%" class="w-100">
+    <div style="" class="w-100 header" >
       <headerHost />
     </div>
-    <div class="w-100" style="height: 90%">
+    <div class="w-100 mt-0 content" style="">
       <router-view v-slot="{ Component }">
         <component :is="Component" />
       </router-view>
@@ -27,3 +27,19 @@
   }
 })
 </script>
+<style lang="scss" scoped>
+  .header{
+    height: 13%;
+  }
+  .content {
+    height: 87%
+  }
+  @media screen and (max-width: 780px){
+    .header{
+      height: 11%;
+    }
+    .content {
+      height: 89%
+    }
+  }
+</style>

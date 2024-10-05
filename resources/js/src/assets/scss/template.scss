@@ -100,7 +100,34 @@ html{
 .n-layout{
   background: transparent
 }
+.mt-1{
+  margin-top:1%;
+}
+.mt-2 {
+  margin-top:2%;
+}
+.mt-3 {
+  margin-top:3%;
+}
+.text-center {
+  text-align:center
+}
+.text-bold{
+  font-weight: bold;
+}
+.hidden-xs{
+  display: block;
+}
+.show-xs{
+  display: hidden;
+}
 @media screen and (max-width: 780px){
+  .hidden-xs{
+    display: none;
+  }
+  .show-xs{
+    display: flex;
+  }
   .sistem-page{
     width: 100%;
     margin: auto;

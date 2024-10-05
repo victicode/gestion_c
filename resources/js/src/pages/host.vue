@@ -1,7 +1,7 @@
 <template>
   <div class="h-100">
     <div class="host-container">
-      <n-card style="" class="host-page px-0 w-100 mt-1" >
+      <n-card style="" class="host-page px-0 w-100" >
         {{ 'Hola ' + user.name}}
         <br>
         {{ 'Hola ' + user.name}}
@@ -34,24 +34,26 @@
 })
 </script>
 <style lang="scss" scoped>
-  .mt-1{
-    margin-top:1%;
-  }
+
   .host-container {
     padding-top:1%;
-    padding-right: 10px;
-    padding-left: 10px;
+    padding-right: 50px;
+    padding-left: 50px;
     height:85%
   }
   .button{
     box-shadow:0px 5px 10px 0px rgba(0, 0, 0, 0.747) 
-    
   }
   .bottom-banner {
     z-index: 1; 
     height:15%; 
     background:rgb(20, 20, 20); 
     box-shadow:0px -5px 10px 0px rgba(0, 0, 0, 0.356) 
-   
+  }
+  @media screen and (max-width: 780px){ 
+    .host-container {
+      padding-right: 10px;
+      padding-left: 10px;
+    }
   }
 </style>
