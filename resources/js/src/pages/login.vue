@@ -2,7 +2,7 @@
   <section id="sistemPage">
     <div />
     <div class="w-100">
-      <div class="w-40" style="margin: auto;">
+      <div class="login__container" style="margin: auto;">
         <div class="header_form w-100" >
           <n-h1 class="mb-0 text-center text-white">Gestión de cola SIAMTEL</n-h1>
         </div>
@@ -120,7 +120,7 @@ export default defineComponent({
         setTimeout(() => {            
           response.data.rol_id == 1 
           ? router.push('/admin')
-          : response.data.rol_id == 2 
+          : response.data.rol_id == 3 
           ? router.push('/counter')
           : router.push('/host')
           
@@ -145,6 +145,9 @@ export default defineComponent({
 });
 </script>
 <style lang="scss" >
+  .login__container{
+    width: 40%;
+  }
   .design_author{
     cursor: pointer;
   }
@@ -159,6 +162,10 @@ export default defineComponent({
     padding: 7px;
   }
 
-
+  @media screen and (max-width: 780px){
+    .login__container{
+      width: 90%;
+    }
+  }
 
 </style>

@@ -11,9 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tickects', function (Blueprint $table) {
+        Schema::create('tickets', function (Blueprint $table) {
             $table->id();
+            $table->string('number');
+            $table->unsignedBigInteger('client');
+            $table->foreign('client')->references('id')->on('clients')->onDelete('cascade');
+            $table->unsignedBigInteger('departament_id');
+            $table->foreign('departament_id')->references('id')->on('departaments')->onDelete('cascade');
+            $table->integer('type');
+            $table->integer('status');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
