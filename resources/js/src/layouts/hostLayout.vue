@@ -1,9 +1,9 @@
 <template>
   <section id="sistemPage">
-    <div style="" class="w-100 header" >
+    <div class="w-100 header" >
       <headerHost />
     </div>
-    <div class="w-100 mt-0 content" style="">
+    <div class="w-100 mt-0 content">
       <router-view v-slot="{ Component }">
         <component :is="Component" />
       </router-view>
@@ -18,7 +18,6 @@
   components:{
     headerHost
   },
-	name: 'App',
 	setup () {
     const { user } = storeToRefs(useAuthStore())
     return {

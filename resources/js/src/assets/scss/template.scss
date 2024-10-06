@@ -109,17 +109,35 @@ html{
 .mt-3 {
   margin-top:3%;
 }
-.text-center {
-  text-align:center
+.text-center{
+  text-align: center;
 }
 .text-bold{
   font-weight: bold;
+}
+.button__section {
+  display:flex; 
+  align-items:center; 
+  padding: 0px 5%
+}
+.button_action__bottom_bar{
+  box-shadow:0px 5px 10px 0px rgba(0, 0, 0, 0.747);
+  padding:30px!important;
+}
+.bottom-banner {
+  display:flex; 
+  justify-content:flex-end; 
+  align-items:center; 
+  z-index: 1; 
+  height:15%; 
+  background:rgb(20, 20, 20); 
+  box-shadow:0px -5px 10px 0px rgba(0, 0, 0, 0.356) 
 }
 .hidden-xs{
   display: block;
 }
 .show-xs{
-  display: hidden;
+  display: none;
 }
 @media screen and (max-width: 780px){
   .hidden-xs{

@@ -11,7 +11,9 @@
           style="height: 100%;"
         >
           <router-view v-slot="{ Component }">
-            <component :is="Component" />
+            <transition name="vertical" >
+              <component :is="Component"/>
+            </transition>
           </router-view>
         </n-layout-content>
       </transition>

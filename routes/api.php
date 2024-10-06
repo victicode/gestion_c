@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\DepartamentController;
 use App\Http\Controllers\Api\UserController;
 
 Route::prefix('auth')->name('user.')->group(function () {
@@ -16,4 +17,8 @@ Route::post('/create-user', [UserController::class, 'storeUser']);
 
 Route::middleware('jwt.verify')->prefix('user')->name('user.')->group(function () {
   Route::get('/', [UserController::class, 'index']);
+});
+
+Route::middleware('jwt.verify')->prefix('departament')->name('departament.')->group(function () {
+  Route::get('/get_pendings', [DepartamentController::class, 'getPendings']);
 });

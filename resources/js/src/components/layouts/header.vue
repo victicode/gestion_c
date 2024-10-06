@@ -1,8 +1,8 @@
 <template>
   <div class="header-host w-100 h-100" style="overflow: hidden; " >
-    <div  class="  w-100"  style="padding:4% 0px">
+    <div  class="  header__section w-100" >
       <!-- <n-card  class="host-page  w-100"  style=""> -->
-      <div class="host-header__coantainer">
+      <div class="host-header__container">
         <div class="items_header text-bold">
           {{ moment(date).format('MMMM Do YYYY, h:mm:ss a') }}
         </div>    
@@ -11,7 +11,7 @@
         </div>
         <div class="items_header action_section " >
           <div class="hidden-xs">
-            <n-button  color="#cbcbcb" size="small" style="padding:20px 10px ">
+            <n-button  color="#cbcbcb" size="small" text-color="black" style="padding:20px 10px" @click="logout()" :loading="loading">
               <div class="">Cerrar sesion</div>
               <template #icon>
                <n-icon :size="'1.3rem'" :component="SignOut24Regular" />
@@ -42,18 +42,25 @@
   import { useAuthStore } from "@/services/store/auth.store";
   import { inject, ref, onMounted } from 'vue';
   import { SignOut24Regular, LineHorizontal320Filled } from '@vicons/fluent'
+  import utils from '@/util/httpUtil.js'
+  import { useRouter } from "vue-router";
 
   
   export default defineComponent({
-	name: 'App',
 	setup () {
     const { user } = storeToRefs(useAuthStore())
     const moment = inject('moment')
     const date = ref()
+    const router = useRouter()
+    const loading = ref(false);
     const clock = () =>{
       setInterval( ()=> {
         date.value = new Date
       },1000 )
+    }
+    const logout = () => {
+      loading.value = true
+      utils.errorLogout( () => router.push('/login'))
     }
     onMounted(() => {
       date.value = new Date
@@ -64,12 +71,17 @@
       moment,
       date,
       SignOut24Regular,
-      LineHorizontal320Filled
+      LineHorizontal320Filled,
+      loading,
+      logout,
     }
   }
 })
 </script>
 <style lang="scss" >
+.header__section {
+  padding: 1% 0%;
+}
 .header-host{
   padding:  0.8%;
   padding-top:  0.5%;
@@ -80,7 +92,7 @@
     padding: 8px 10px!important;
   }
 }
-.host-header__coantainer{
+.host-header__container{
   display:flex;
   justify-content: space-between;
   align-items: center;
@@ -97,6 +109,9 @@
 }
 
 @media screen and (max-width: 780px){
+  .header__section{
+    padding:4% 0px
+  }
   .header-host{
     padding-top:  2%;
     padding: 3%;

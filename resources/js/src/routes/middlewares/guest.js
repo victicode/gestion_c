@@ -4,7 +4,7 @@ export default function guest (_to, _from, next) {
   if (isAuthenticated) {
     window.localStorage.getItem('is_admin') ==  '1' 
     ? next({ path: '/admin' }) 
-    : window.localStorage.getItem('is_admin') ==  '2' 
+    : window.localStorage.getItem('is_admin') ==  '3' 
     ? next({ path: '/counter' })
     : next({ path: '/host' })
 
