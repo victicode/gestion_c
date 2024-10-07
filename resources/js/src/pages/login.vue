@@ -45,8 +45,6 @@
               </n-col>
             </n-row>
           </n-form>
-        
-    
         </n-card>
       </div>
     </div>
@@ -116,7 +114,7 @@ export default defineComponent({
       }
       authStore.login(data)
       .then((response) => {
-        message.success('Incio de sesión correcto!');
+        message.success('Inicio de sesión correcto!');
         setTimeout(() => {            
           response.data.rol_id == 1 
           ? router.push('/admin')

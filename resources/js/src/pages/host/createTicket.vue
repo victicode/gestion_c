@@ -1,8 +1,18 @@
 <template>
   <div class="h-100">
     <div class="host-container">
-      <div  class=" px-0 w-100 h-100" style="max-height:100%" >
-        <departamentSquare />
+      <transition name="horizontal">
+        <div  class=" px-0 w-100 h-100" style="max-height:100%;" v-show="step==1">
+          <departamentSquare @selectedDepartament="setDepartament" />
+        </div>
+      </transition>
+      <transition name="horizontal">
+        <div  class=" px-0 w-100 h-100" style="max-height:100%;" v-show="step==2">
+          <clientForm :departament="dataForTicket.departament" @selectedUser="setClient" />
+        </div>
+      </transition>
+      <div  class=" px-0 w-100 h-100" style="max-height:100%" v-show="step==3">
+       hola2
       </div>
     </div>
     <div  class="w-100 bottom-banner" >
@@ -13,7 +23,7 @@
           round 
           size="large" 
           class="button_action__bottom_bar" 
-          @click="router.push('/host')"
+          @click="step == 1 ? router.push('/host') : step--; validate=false"
         >
           Volver
         </n-button>
@@ -25,6 +35,9 @@
           round 
           size="large" 
           class="button_action__bottom_bar" 
+          :disabled="validate"
+          @click="actionButton()"
+
         >
           Siguiente
         </n-button>
@@ -33,46 +46,86 @@
   </div>
 </template>
 <script>
-  import { storeToRefs } from 'pinia'
-  import { useAuthStore } from '@/services/store/auth.store';
+  import { useTicketStore  } from '@/services/store/ticket.store';
+
   import departamentSquare from '@/components/departaments/departamentsSquare.vue'
+  import clientForm from '@/components/host/ticket/clientForm.vue'
+
   import { useRouter } from 'vue-router'
+  import { ref } from 'vue'
+
   export default defineComponent({
   components: {
-    departamentSquare
+    departamentSquare,
+    clientForm,
   },
 	setup () {
-    const { user } = storeToRefs(useAuthStore())
+
+    const ticketStore = useTicketStore();
     const router = useRouter()
+    const step = ref(1)
+    const validate = ref(true)
+    const dataForTicket = ref({
+      ci: '',
+      name: '',
+      phone: '', 
+      email: '', 
+      client_id: '',
+      departament: {},
+      departament_id:null
+    })
+
+    const setDepartament = (departament) => {
+      dataForTicket.value.departament = departament;
+      dataForTicket.value.departament_id = departament.id;
+
+      validate.value = false
+    }
+
+    const setClient = (client) => {
+      dataForTicket.value.ci = client.ci;
+      dataForTicket.value.name = client.name;
+      dataForTicket.value.phone = client.phone;
+      dataForTicket.value.email = client.email;
+      dataForTicket.value.client_id = client.id;
+
+      validate.value = false
+    }
+    const createTicket = () => {
+
+      // console.log(dataForTicket.value)
+      ticketStore.createTicket(dataForTicket.value)
+      .then((data) => {
+        console.log(data)
+      })
+    }
+    const actionButton = () => {
+      if(step.value == 1) {
+        step.value++ 
+        validate.value=true
+        return
+      }
+      if(step.value == 2) {
+        createTicket()
+        return
+      }
+      if(step.value == 3) {
+        router.push('/host')
+        return
+      }
+      
+    }
     return {
-      user,
-      router
+      step,
+      validate,
+      dataForTicket,
+      setDepartament,
+      setClient,
+      actionButton,
     }
   }
 })
 </script>
 <style lang="scss" >
-  
-  .host-container {
-    padding-top:1%;
-    padding-right: 50px;
-    padding-left: 50px;
-    height:85%;
-    padding-bottom:1%;
-    .n-card__content {
-      height:100%
-    }
-  }
-  @media screen and (max-width: 780px){ 
-    .host-container {
-      padding-right: 10px;
-      padding-left: 10px;
-      padding-bottom:5%;
-      .n-card__content {
-        padding-right: 0px!important;
-        padding-left: 0px!important;
-        height:100%
-      }
-    }
-  }
+
 </style>

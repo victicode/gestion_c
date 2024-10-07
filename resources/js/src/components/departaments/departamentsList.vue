@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <n-h2 class=" w-100 text-bold" style="margin-bottom:5px">Lista de espera</n-h2>
+  <div style="height: 94%; " >
+    <n-h2 class=" w-100 text-bold" style="margin-bottom:5px; margin-left: 15px">Lista de espera</n-h2>
     <div class="departament__container">
       <div v-for="(departament, index) in departaments" :key="index"  class="departamentList__table">
         <div class="departamentList__item">

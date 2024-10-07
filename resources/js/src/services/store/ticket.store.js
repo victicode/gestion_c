@@ -2,20 +2,21 @@ import { defineStore } from "pinia";
 import ApiService from "@/services/axios/";
 import JwtService from "@/services/jwt/";
 
-export const useDepartamentStore = defineStore("departament", {
+
+export const useTicketStore = defineStore("ticket", {
   actions: {
-    async getDepartamentsWithPending() {
+    async createTicket(data) {
       return await new Promise((resolve, reject) => {
         if (JwtService.getToken()) {
           ApiService.setHeader();
-          ApiService.get("/api/departament/get_pendings")
+          ApiService.post("/api/ticket", data)
           .then(({ data }) => {
             if(data.code !== 200) throw data;
             resolve(data)
           })
           .catch((response) => {
             console.log(response)
-            reject('Error al obtener departamento');
+            reject('Error al cliente');
           });
         }
       })

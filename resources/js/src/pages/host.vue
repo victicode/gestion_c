@@ -41,28 +41,5 @@
 })
 </script>
 <style lang="scss" >
-  
-  .host-container {
-    padding-top:1%;
-    padding-right: 50px;
-    padding-left: 50px;
-    height:85%;
-    padding-bottom:1%;
-    .n-card__content {
-      height:100%
-    }
-  }
 
-  @media screen and (max-width: 780px){ 
-    .host-container {
-      padding-right: 10px;
-      padding-left: 10px;
-      padding-bottom:5%;
-      .n-card__content {
-        padding-right: 0px!important;
-        padding-left: 0px!important;
-        height:100%
-      }
-    }
-  }
 </style>

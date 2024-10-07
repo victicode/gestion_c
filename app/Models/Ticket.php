@@ -8,4 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class Ticket extends Model
 {
     use HasFactory;
+    protected $fillable = ['number', 'client_id', 'departament_id ', 'type', 'status'];
+
 }

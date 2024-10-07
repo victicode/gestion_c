@@ -4,20 +4,20 @@
       position="absolute"
       style="width:100%; height: 100vh; overflow: hidden; transition: all 0.3s; background: transparent"
     >
-      <transition name="vertical">
+      <transition name="vicFade">
         <n-layout-content
           v-if="readyState && readyState2"
           class="layout-content"
           style="height: 100%;"
         >
           <router-view v-slot="{ Component }">
-            <transition name="vertical" >
+            <transition name="vicFade" >
               <component :is="Component"/>
             </transition>
           </router-view>
         </n-layout-content>
       </transition>
-      <transition name="vertical">
+      <transition name="vicFade">
         <div  v-if="!readyState" class="loadingPage">
           <n-spin :show="true" size="large" stroke="primary" />
         </div>
@@ -56,7 +56,7 @@ export default defineComponent({
 		window.$loadingBar = useLoadingBar()
 
     const isReady = () => {
-      readyState.value =  route.name == 'dashboard' || route.name == 'dashboard_admin' ? false : true
+      readyState.value =  route.name == 'hostDashboardx' || route.name == 'hostDashboardx_admin' ? false : true
       readyState2.value =  route.name == 'Login' ? true : false
     }
     const getCurrentUser = (inject = null) =>{
@@ -64,9 +64,11 @@ export default defineComponent({
 
       authStore.currentUser().then((data)=>{
         if(data.code !== 200 ) throw data
-        console.log(data)
-        readyState.value = true
-        readyState2.value = true
+        setTimeout(()=>{
+
+          readyState.value = true
+          readyState2.value = true
+        }, 2000)
       }).catch((e) => { 
         utils.errorLogout( () => router.push('/login'))
       })
@@ -77,7 +79,7 @@ export default defineComponent({
         readyState2.value = true
         return true
       }
-      if(route.name !== 'dashboard' && route.name != 'dashboard_admin' && Object.values(user).length > 0) {
+      if(route.name !== 'hostDashboardx' && route.name != 'hostDashboardx_admin' && Object.values(user).length > 0) {
         readyState2.value = true
         return true
       }

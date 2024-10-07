@@ -5,7 +5,9 @@
     </div>
     <div class="w-100 mt-0 content">
       <router-view v-slot="{ Component }">
-        <component :is="Component" />
+        <transition name="vertical" >
+          <component :is="Component"/>
+        </transition>
       </router-view>
     </div>
   </section>
