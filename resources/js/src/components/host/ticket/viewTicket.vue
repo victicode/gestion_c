@@ -4,6 +4,12 @@
       <div v-if="Object.values(ticket).length > 0 ">
         <n-h6 class=" w-100 text-bold text-center" style="margin-bottom:5px">Has sido asigado de forma exitosa🎉</n-h6>
         <div class="view-ticket">
+          <div class="number_section">
+            <n-h1>
+              {{ ticket.number }}
+            </n-h1>
+          </div>
+          
         </div>
       </div>
     </n-card>
@@ -23,6 +29,7 @@ export default defineComponent({
     const ticket = ref(props.ticket)
     
     watch(() => props.ticket, (newValue) => {
+      console.log(newValue)
       ticket.value = newValue
     });
 
