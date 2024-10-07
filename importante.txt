@@ -4,3 +4,7 @@ Niveles de usuarios
   3 counter
 
 funcionamiento: 
+
+
+crear vista de cola.
+crear vista de display con listener

@@ -130,6 +130,7 @@
     return {
       step,
       loading,
+      router,
       validate,
       dataForTicket,
       ticket,

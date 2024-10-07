@@ -4,7 +4,6 @@
       <n-card  class="px-0 form_title" >
         <n-h2 class="w-100 text-bold hidden-xs" style="margin-bottom:0px">Selecciona el departamento</n-h2>
         <n-h4 class="w-100 text-bold show-block-xs" style="margin-bottom:0px; margin-top: 0px!important">Selecciona el departamento</n-h4>
-
       </n-card>
     </div>
     <div class="departamentSquare__container mt-xs-1" v-if="departaments.length > 0">

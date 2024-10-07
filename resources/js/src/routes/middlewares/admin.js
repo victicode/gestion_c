@@ -1,5 +1,5 @@
 export default function admin (_to, _from, next) {
-  document.title = _to.meta.title + ' - Woz Pay'
+  document.title = _to.meta.title + ' - Gestion C'
   const isAuthenticated = window.localStorage.getItem('id_token');
   const isAdmin = window.localStorage.getItem('is_admin');
 

@@ -1,10 +1,10 @@
 <template>
-  <div style="height: 94%; " >
+  <div style="height: 90%;" >
     <n-h2 class=" w-100 text-bold" style="margin-bottom:5px; margin-left: 15px">Lista de espera</n-h2>
     <div class="departament__container">
       <div v-for="(departament, index) in departaments" :key="index"  class="departamentList__table">
         <div class="departamentList__item">
-          <div>
+          <div class="departamentList__item--name">
             {{ departament.name }}
           </div>
           <div class="count_section">
@@ -31,7 +31,6 @@
     const getDepartamentList = () => {
       departamentStore.getDepartamentsWithPending()
       .then((response) => {
-        console.log(response)
         departaments.value = response.data
       })
     }
@@ -66,11 +65,19 @@
     display:flex;
     justify-content: space-between;
   }
-  .departamentList__item {
+  .departamentList__item{
     padding: 15px 5px;
     display:flex;
     justify-content: space-between;
-    border-bottom: 1px solid
+    border-bottom: 1px solid;
+    &--name{
+      cursor:pointer;
+      transition:all 0.5s ease;
+      &:hover {
+        text-decoration:underline;
+        color:grey;
+      }
+    }
   }
   .button{
     box-shadow:0px 5px 10px 0px rgba(0, 0, 0, 0.747) 

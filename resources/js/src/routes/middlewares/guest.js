@@ -1,5 +1,5 @@
 export default function guest (_to, _from, next) {
-  document.title = _to.meta.title + ' - Woz Pay'
+  document.title = _to.meta.title + ' - Gestion C'
   const isAuthenticated = window.localStorage.getItem('id_token');
   if (isAuthenticated) {
     window.localStorage.getItem('is_admin') ==  '1' 

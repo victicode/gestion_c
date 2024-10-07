@@ -55,20 +55,19 @@ export default defineComponent({
 		window.$notification = useNotification()
 		window.$loadingBar = useLoadingBar()
 
-    const isReady = () => {
-      readyState.value =  route.name == 'hostDashboardx' || route.name == 'hostDashboardx_admin' ? false : true
+    const isReady = (inject = null) => {
+      readyState.value =  inject ? false : route.name == 'hostDashboard' || route.name == 'hostDashboard_admin' ? false : true
       readyState2.value =  route.name == 'Login' ? true : false
     }
-    const getCurrentUser = (inject = null) =>{
+    const getCurrentUser = () =>{
       if(exceptionsToShow()) return
 
       authStore.currentUser().then((data)=>{
         if(data.code !== 200 ) throw data
         setTimeout(()=>{
-
           readyState.value = true
           readyState2.value = true
-        }, 2000)
+        }, 500)
       }).catch((e) => { 
         utils.errorLogout( () => router.push('/login'))
       })
@@ -79,7 +78,7 @@ export default defineComponent({
         readyState2.value = true
         return true
       }
-      if(route.name !== 'hostDashboardx' && route.name != 'hostDashboardx_admin' && Object.values(user).length > 0) {
+      if(route.name !== 'hostDashboard' && route.name != 'hostDashboard_admin' && Object.values(user).length > 0) {
         readyState2.value = true
         return true
       }
@@ -90,10 +89,7 @@ export default defineComponent({
       getCurrentUser()
     })
 
-    onMounted(() =>{
-      isReady()
-    
-    })
+    isReady(true)
 
 		return {
       readyState2,

@@ -122,7 +122,7 @@ export default defineComponent({
           ? router.push('/counter')
           : router.push('/host')
           
-        }, 1000);
+        }, 500);
       })
       .catch((response) => {
         message.error(response.message);
