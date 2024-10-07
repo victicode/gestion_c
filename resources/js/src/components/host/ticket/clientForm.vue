@@ -95,7 +95,6 @@ export default defineComponent({
       email: '',
       dep: ''
     });
-    const loading = ref(false)
 
     const rules = {
       name: [
@@ -167,6 +166,7 @@ export default defineComponent({
           loadingInput.value = false
           return
         }
+        formTicket.value?.validate()
         emit('selectedUser', {...client.value, check:false})
       })
       .catch((response) => {
@@ -204,7 +204,6 @@ export default defineComponent({
       formTicket,
       client,
       rules,
-      loading,
       departament,
       loadingInput,
       validateToSend,

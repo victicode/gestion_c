@@ -11,15 +11,15 @@ class TicketController extends Controller
 {
     public function createTicket(Request $request) {
         
-        // $ticket = Ticket::create([
-        //     'number'            => $this->setNumberTicket($request->departament_id),
-        //     'client_id'         => $this->setUserformat($request),
-        //     'departament_id'    => $request->departament_id,
-        //     'type'              => 1,
-        //     'status'            => 1,
-        // ]);
+        $ticket = Ticket::create([
+            'number'            => $this->setNumberTicket($request->departament_id),
+            'client_id'         => $this->setUserformat($request),
+            'departament_id'    => $request->departament_id,
+            'type'              => 1,
+            'status'            => 1,
+        ]);
         
-        return $this->returnSuccess(200, $this->setNumberTicket($request->departament_id));
+        return $this->returnSuccess(200,  $ticket->load('client')->load('departament'));
     }
     private function setUserformat(Request $request){
         return $request->client_id 
@@ -27,9 +27,6 @@ class TicketController extends Controller
         :   ClientController::storeClient($request)->id;
     }
     private function setNumberTicket($departamentId){
-        $number = ''
-
-
         return DepartamentController::getCorrelative($departamentId);
     }
 }

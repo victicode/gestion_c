@@ -11,9 +11,11 @@
           <clientForm :departament="dataForTicket.departament" @selectedUser="setClient" />
         </div>
       </transition>
-      <div  class=" px-0 w-100 h-100" style="max-height:100%" v-show="step==3">
-       hola2
-      </div>
+      <transition name="horizontal">
+        <div  class=" px-0 w-100 h-100" style="max-height:100%" v-show="step==3">
+          <viewTicket :ticket="ticket" />
+        </div>
+      </transition>
     </div>
     <div  class="w-100 bottom-banner" >
       <div class="h-100 button__section">
@@ -23,6 +25,7 @@
           round 
           size="large" 
           class="button_action__bottom_bar" 
+          v-if="step!==3"
           @click="step == 1 ? router.push('/host') : step--; validate=false"
         >
           Volver
@@ -37,9 +40,9 @@
           class="button_action__bottom_bar" 
           :disabled="validate"
           @click="actionButton()"
-
+          :loading="loading"
         >
-          Siguiente
+          {{ step == 1 ? 'Siguiente' : step == 2 ? 'Generar Ticket' : 'Volver al inicio'  }}
         </n-button>
       </div>
     </div>
@@ -50,7 +53,7 @@
 
   import departamentSquare from '@/components/departaments/departamentsSquare.vue'
   import clientForm from '@/components/host/ticket/clientForm.vue'
-
+  import viewTicket from '@/components/host/ticket/viewTicket.vue';
   import { useRouter } from 'vue-router'
   import { ref } from 'vue'
 
@@ -58,10 +61,13 @@
   components: {
     departamentSquare,
     clientForm,
+    viewTicket
   },
 	setup () {
 
+    const loading = ref(false)
     const ticketStore = useTicketStore();
+    const ticket = ref({})
     const router = useRouter()
     const step = ref(1)
     const validate = ref(true)
@@ -92,11 +98,17 @@
       validate.value = false
     }
     const createTicket = () => {
-
-      // console.log(dataForTicket.value)
+      loading.value = true
       ticketStore.createTicket(dataForTicket.value)
-      .then((data) => {
-        console.log(data)
+      .then((response) => {
+        if(response.code !== 200) throw response
+        ticket.value = response.data;
+        loading.value = false;
+        step.value = 3;
+      })
+      .catch((response) => {
+        loading.value = false
+        console.log(response)
       })
     }
     const actionButton = () => {
@@ -117,8 +129,10 @@
     }
     return {
       step,
+      loading,
       validate,
       dataForTicket,
+      ticket,
       setDepartament,
       setClient,
       actionButton,

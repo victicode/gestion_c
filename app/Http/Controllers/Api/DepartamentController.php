@@ -15,6 +15,11 @@ class DepartamentController extends Controller
     }
     public static function getCorrelative($id) {
         $departaments =  Departament::withCount('ticketsByDay')->find($id);
-        return $departaments->tickets_by_day_count + 1;
+
+        $acr = $departaments->acr;
+        $number = $departaments->tickets_by_day_count + 1;
+        $cero = substr("000", strlen( (string)$departaments->tickets_by_day_count) );
+
+        return $acr.$cero.$number;
     }
 }
