@@ -21,5 +21,21 @@ export const useTicketStore = defineStore("ticket", {
         }
       })
     },
+    async deleteTicket(ticketId) {
+      return await new Promise((resolve, reject) => {
+        if (JwtService.getToken()) {
+          ApiService.setHeader();
+          ApiService.post("/api/ticket/delete/"+ticketId)
+          .then(({ data }) => {
+            if(data.code !== 200) throw data;
+            resolve(data)
+          })
+          .catch((response) => {
+            console.log(response)
+            reject('Error al borrar el ticket');
+          });
+        }
+      })
+    },
   },
 });

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Departament extends Model
 {
@@ -28,6 +29,12 @@ class Departament extends Model
         ->where('status','!=',0)
         ->whereDate('created_at', '=' , date('Y-m-d'))
         ->whereTime('created_at', '<', '23:59:59');
-
     }   
+    public function currentTicket(): HasOne
+    {
+        return $this->hasOne(Ticket::class)
+        ->where('status', 2)
+        ->whereDate('created_at', '=' , date('Y-m-d'))
+        ->whereTime('created_at', '<', '23:59:59');
+    }  
 }

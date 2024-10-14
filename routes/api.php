@@ -23,6 +23,13 @@ Route::middleware('jwt.verify')->prefix('user')->name('user.')->group(function (
 
 Route::middleware('jwt.verify')->prefix('departament')->name('departament.')->group(function () {
   Route::get('/get_pendings', [DepartamentController::class, 'getPendings']);
+  Route::get('/queue/{id}', [DepartamentController::class, 'getDepartamentQueueById']);
+
+});
+
+Route::prefix('departament')->name('departament.')->group(function () {
+  Route::get('/display', [DepartamentController::class, 'getPendings']);
+
 });
 
 Route::middleware('jwt.verify')->prefix('client')->name('client.')->group(function () {
@@ -31,4 +38,6 @@ Route::middleware('jwt.verify')->prefix('client')->name('client.')->group(functi
 
 Route::middleware('jwt.verify')->prefix('ticket')->name('ticket.')->group(function () {
   Route::post('/', [TicketController::class, 'createTicket']);
+  Route::post('/delete/{id}', [TicketController::class, 'deleteTicket']);
+
 });

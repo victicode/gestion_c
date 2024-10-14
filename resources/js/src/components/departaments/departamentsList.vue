@@ -3,7 +3,7 @@
     <n-h2 class=" w-100 text-bold" style="margin-bottom:5px; margin-left: 15px">Lista de espera</n-h2>
     <div class="departament__container">
       <div v-for="(departament, index) in departaments" :key="index"  class="departamentList__table">
-        <div class="departamentList__item">
+        <div class="departamentList__item" @click="goTo(departament.id)">
           <div class="departamentList__item--name">
             {{ departament.name }}
           </div>
@@ -22,27 +22,31 @@
   import { useDepartamentStore } from '@/services/store/departament.store';
   import { ref, onMounted } from 'vue'
   import { PeopleAudience20Regular } from '@vicons/fluent'
-
+  import { useRouter } from 'vue-router'
   export default defineComponent({
-	setup () {
-    const departamentStore = useDepartamentStore()
-    const departaments = ref([])
-
-    const getDepartamentList = () => {
-      departamentStore.getDepartamentsWithPending()
-      .then((response) => {
-        departaments.value = response.data
+    setup () {
+      const departamentStore = useDepartamentStore()
+      const departaments = ref([])
+      const router = useRouter()
+      const goTo = (id) => {
+        router.push('/departament/list/'+id)
+      }
+      const getDepartamentList = () => {
+        departamentStore.getDepartamentsWithPending()
+        .then((response) => {
+          departaments.value = response.data
+        })
+      }
+      onMounted(() => {
+        getDepartamentList()
       })
+      return {
+        departaments,
+        PeopleAudience20Regular,
+        goTo,
+      }
     }
-    onMounted(() => {
-      getDepartamentList()
-    })
-    return {
-      departaments,
-      PeopleAudience20Regular
-    }
-  }
-})
+  })
 </script>
 <style lang="scss" >
   .departament__container {

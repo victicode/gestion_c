@@ -74,7 +74,7 @@ export default defineComponent({
     }
     const exceptionsToShow = () => {
       const user = useAuthStore().user;
-      if(route.name == 'Login') {
+      if(route.name == 'Login' || route.name == 'mmm') {
         readyState2.value = true
         return true
       }

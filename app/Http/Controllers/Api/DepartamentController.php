@@ -10,8 +10,12 @@ class DepartamentController extends Controller
 {
     //
     public function getPendings(Request $request) {
-        $departaments =  Departament::query()->with('ticketsPending')->get();
+        $departaments =  Departament::query()->with('ticketsPending', 'currentTicket.client')->get();
         return $this->returnSuccess(200, $departaments);
+    }
+    public function getDepartamentQueueById($id) {
+        $departament =  Departament::with('ticketsPending.client')->find($id);
+        return $this->returnSuccess(200, $departament);
     }
     public static function getCorrelative($id) {
         $departaments =  Departament::withCount('ticketsByDay')->find($id);
