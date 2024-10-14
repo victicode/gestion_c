@@ -57,10 +57,11 @@ export default defineComponent({
   props: {
     ticket: Object
   },
-  emits: ['selectedUser'],
-  setup (props, { emit }) {
+
+  setup (props) {
     const ticket = ref(props.ticket)
     const moment = inject('moment')
+    
     watch(() => props.ticket, (newValue) => {
       ticket.value = newValue
     });

@@ -19,7 +19,7 @@
             </n-button>
           </div>
           <div class="show-xs w-100" style="justify-content:space-between; ">
-            <n-button  circle color="#cbcbcb" size="medium">
+            <n-button  circle color="#cbcbcb" size="medium" @click="logout()">
               <template #icon>
                 <n-icon :size="'1.3rem'" :component="SignOut24Regular" />
               </template>

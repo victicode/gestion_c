@@ -21,6 +21,13 @@ class TicketController extends Controller
         
         return $this->returnSuccess(200,  $ticket->load('client')->load('departament'));
     }
+    public function deleteTicket($ticketId){
+        $ticket = Ticket::find($ticketId);
+        if(!$ticket) return $this->returnFail(400, 'Ticket no encontrado');
+        $ticket->delete();
+
+        return $this->returnSuccess(200, $ticket);
+    }
     private function setUserformat(Request $request){
         return $request->client_id 
         ?   Client::find($request->client_id)->id

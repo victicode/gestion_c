@@ -168,6 +168,32 @@ html{
   transform: translateX(-1000px);
 }
 
+
+.fadex-enter-active,
+.fadex-leave-active{
+  transition: all 1s ease;
+  opacity: 0;
+}
+
+.fadex-enter-from {
+  opacity: 0;
+  transition-delay: 1s ;
+}
+.fadex-enter-to{
+  transition-delay: 1s ;
+
+  opacity: 1;
+}
+.fadex-leave-from {
+  opacity: 1;
+
+}
+.fadex-leave-to {
+  opacity: 0;
+} 
+
+
+
 #sistemPage{
   display: flex;
   justify-content: space-between;

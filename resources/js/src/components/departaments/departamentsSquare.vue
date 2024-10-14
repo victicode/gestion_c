@@ -26,11 +26,11 @@
 </template>
 <script>
   import { useDepartamentStore } from '@/services/store/departament.store';
-  import { ref, onMounted, watch } from 'vue'
+  import { ref, onMounted} from 'vue'
   import { PeopleAudience20Regular } from '@vicons/fluent'
 
 export default defineComponent({
-
+  
   emits: ['selectedDepartament'],
   setup (props, { emit }) {
     const departamentStore = useDepartamentStore()
