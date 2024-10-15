@@ -74,11 +74,11 @@ export default defineComponent({
     }
     const exceptionsToShow = () => {
       const user = useAuthStore().user;
-      if(route.name == 'Login' || route.name == 'mmm') {
+      if(route.name == 'Login' || route.name == 'waitRoom') {
         readyState2.value = true
         return true
       }
-      if(route.name !== 'hostDashboard' && route.name != 'hostDashboard_admin' && Object.values(user).length > 0) {
+      if(route.name !== 'hostDashboard' && route.name != 'hostDashboard_admin'  && route.name != 'counterDashboard' && Object.values(user).length > 0) {
         readyState2.value = true
         return true
       }

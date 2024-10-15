@@ -4,6 +4,8 @@ import auth from './middlewares/auth'
 import admin from './middlewares/admin'
 import guest from './middlewares/guest'
 import hostLayout from '@/layouts/hostLayout.vue'
+import counterLayout from '@/layouts/counterLayout.vue'
+
 import hostPage from '@/pages/host.vue'
 
 const setInitByRol = () => {
@@ -58,7 +60,24 @@ const routes = [
     beforeEnter: auth,
   },
   {
-    name:'mmm',
+    path: '/', 
+    component: counterLayout ,
+    children:[
+      {
+
+        name:'counterDashboard',
+        path: '/counter', 
+        meta: {
+          title : 'Bienvenido'
+        },
+        component: () => import('@/pages/counter.vue'), 
+      }
+    ],
+    beforeEnter: auth,
+
+  },
+  {
+    name:'waitRoom',
     path: '/view/all', 
     meta: {
       title : 'Sala de espera'

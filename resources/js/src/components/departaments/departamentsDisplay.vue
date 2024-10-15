@@ -2,69 +2,57 @@
   <div v-if="departaments.length > 0" class="h-100 displayContent">
     <transition name="fadex">
       <div v-if="show == 1" class="departamentGroup">
-        <div v-for="departament in departaments1" :key="departament.id" style="width:80%!important;"  >
+        <div v-for="departament in departaments1" :key="departament.id" style="width:77%!important;"  >
           <div class="displayDepartament__content">
             <div>
-              <div class="mb-0 text-center" style="font-size: 22px;" >
+              <div class="mb-0 text-center" style="font-size: 1.5rem;" >
               {{ departament.name }}
               </div>
             </div>
             <div>
-              <n-h1 class="text-bold mb-0"> 
+              <n-h1 class="text-bold mb-0" style="    font-size: 3.8rem; line-height: 1.05;" > 
                 {{ departament.current_ticket ? departament.current_ticket.number : '---' }}
               </n-h1>
             </div>
-            <div>
-              <div class="mb-0 text-center" style="font-size: 22px;" >
-                {{ departament.current_ticket ? departament.current_ticket.client.name  : '...' }}
-              </div>
-            </div>
+            
           </div>
         </div>
       </div>
     </transition>        
     <transition name="fadex">
       <div v-if="show == 2" class="departamentGroup">
-        <div v-for="departament in departaments2" :key="departament.id" style="width:80%!important; "   >
+        <div v-for="departament in departaments2" :key="departament.id" style="width:77%!important; "   >
           <div class="displayDepartament__content">
             <div>
-              <div class="mb-0 text-center" style="font-size: 22px;" >
+              <div class="mb-0 text-center" style="font-size: 1.5rem;" >
               {{ departament.name }}
               </div>
             </div>
             <div>
-              <n-h1 class="text-bold mb-0"> 
+              <n-h1 class="text-bold mb-0" style="    font-size: 3.8rem; line-height: 1.05;" > 
                 {{ departament.current_ticket ? departament.current_ticket.number : '---' }}
               </n-h1>
             </div>
-            <div>
-              <div class="mb-0 text-center" style="font-size: 22px;" >
-                {{ departament.current_ticket ? departament.current_ticket.client.name  : '...' }}
-              </div>
-            </div>
+            
           </div>
         </div>
       </div>
     </transition>        
     <transition name="fadex">
       <div v-if="show == 3" class="departamentGroup last">
-        <div v-for="departament in departaments3" :key="departament.id" style="width:80%!important; "  class="mt-3" >
+        <div v-for="departament in departaments3" :key="departament.id" style="width:77%!important; "  class="mt-3" >
           <div class="displayDepartament__content">
             <div>
-              <div class="mb-0 text-center" style="font-size: 22px;" >
+              <div class="mb-0 text-center" style="font-size: 1.5rem;" >
               {{ departament.name }}
               </div>
             </div>
             <div>
-              <n-h1 class="text-bold mb-0"> 
+              <n-h1 class="text-bold mb-0" style="    font-size: 3.8rem; line-height: 1.05;" > 
                 {{ departament.current_ticket ? departament.current_ticket.number : '---' }}
               </n-h1>
             </div>
-            <div>
-              <div class="mb-0 text-center" style="font-size: 22px;" >
-                {{ departament.current_ticket ? departament.current_ticket.client.name  : '...' }}
-              </div>
-            </div>
+            
           </div>
         </div>
       </div>
@@ -147,7 +135,7 @@
   padding: 0px 1rem;
 }
 .displayDepartament__content{
-    padding: 0.5rem 8px;
+    padding: 0.5rem 8px 1.3rem 8px;
     display:flex;
     justify-content: center;
     flex-direction: column;

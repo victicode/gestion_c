@@ -1,24 +1,24 @@
 <template>
-  <section id="sistemPage">
-    <div class="w-100 header" >
-      <headerHost />
-    </div>
-    <div class="w-100 mt-0 content">
+  <div class="counter__base">
+    <section id="section-header">
+      <headerCounter />
+    </section>
+    <section>
       <router-view v-slot="{ Component }">
         <transition name="vertical" >
           <component :is="Component"/>
         </transition>
       </router-view>
-    </div>
-  </section>
-</template> 
+    </section>
+  </div>
+</template>
 <script>
   import { storeToRefs } from 'pinia'
   import { useAuthStore } from "@/services/store/auth.store";
-  import headerHost from '@/components/layouts/header.vue'
+  import headerCounter from '@/components/layouts/headerCounter.vue'
   export default defineComponent({
     components:{
-      headerHost
+      headerCounter 
     },
     setup () {
       const { user } = storeToRefs(useAuthStore())
@@ -28,19 +28,13 @@
     }
   })
 </script>
-<style lang="scss" scoped>
-  .header{
-    height: 13%;
-  }
-  .content {
-    height: 87%
-  }
-  @media screen and (max-width: 780px){
-    .header{
-      height: 11%;
-    }
-    .content {
-      height: 89%
-    }
-  }
+<style lang="scss">
+#section-header{
+  height: 9%;
+}
+.counter__base{
+  width: 100%;
+  height: 100%;
+  background: white;
+}
 </style>

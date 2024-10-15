@@ -114,6 +114,8 @@ export default defineComponent({
       }
       authStore.login(data)
       .then((response) => {
+
+        console.log(response)
         message.success('Inicio de sesión correcto!');
         setTimeout(() => {            
           response.data.rol_id == 1 

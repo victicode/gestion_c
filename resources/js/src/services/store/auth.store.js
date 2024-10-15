@@ -14,6 +14,8 @@ export const useAuthStore = defineStore("auth", {
     setAuth(user){
       this.isAuthenticated = true;
       this.errors = {};
+      console.log(user)
+
       this.setUser(user.data)
       this.setIsAdmin(user.data)
     },
@@ -21,6 +23,7 @@ export const useAuthStore = defineStore("auth", {
       this.user = user;
     },
     setIsAdmin(user){
+      console.log(user)
       storage.setItem("is_admin",  user.rol_id);
       storage.setItem("user_unique_id",user.id);
     },
@@ -58,11 +61,14 @@ export const useAuthStore = defineStore("auth", {
               ApiService.setHeader();
               ApiService.get("api/user")
               .then((dataUser) => {
-                if(dataUser.code !== 200) throw dataUser
+
+                if(dataUser.data.code !== 200) throw dataUser
                 this.setAuth(dataUser.data)
                 resolve(dataUser.data);
+
               }).catch( (response) => {
-                resolve(response);
+                console.log(response)
+                reject(response);
               })
             }
           })
