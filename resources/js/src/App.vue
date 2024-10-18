@@ -56,7 +56,14 @@ export default defineComponent({
 		window.$loadingBar = useLoadingBar()
 
     const isReady = (inject = null) => {
-      readyState.value =  inject ? false : route.name == 'hostDashboard' || route.name == 'hostDashboard_admin' ? false : true
+      readyState.value =  route.name == 'Login' 
+      ? true 
+      : inject 
+      ? false 
+      : route.name == 'hostDashboard' || route.name == 'hostDashboard_admin' || route.name == 'counterDashboard' 
+      ? false 
+      : true
+
       readyState2.value =  route.name == 'Login' ? true : false
     }
     const getCurrentUser = () =>{

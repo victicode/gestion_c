@@ -3,7 +3,7 @@
     <div  class=" header-counter__section w-100 h-100" >
       <div class="counter-header__container h-100">
         <div class="items_header__img " >
-          <img src="https://siamtel.lara.gob.ve/fundacion-siamtel/wp-content/uploads/2021/02/cintillo.png"   width="180" style="filter: grayscale(2) brightness(100);"/>
+          <img src="https://siamtel.lara.gob.ve/fundacion-siamtel/wp-content/uploads/2021/02/cintillo.png"   style="filter: grayscale(2) brightness(100);"/>
         </div>
         <div class="items_header__user  text-bold">
           <n-avatar
@@ -35,14 +35,14 @@
             </n-button>
           </div>
           <div class="show-xs w-100" style="justify-content:space-between; ">
-            <n-button  circle color="#cbcbcb" size="medium" @click="logout()">
-              <template #icon>
-                <n-icon :size="'2rem'" :component="SignOut24Regular" />
-              </template>
-            </n-button>
             <n-button  circle color="#cbcbcb" size="medium">
               <template #icon>
-              <n-icon :size="'2rem'" :component="LineHorizontal320Filled" />
+              <n-icon :size="'1.5rem'" :component="Settings32Regular" />
+              </template>
+            </n-button>
+            <n-button  circle color="#cbcbcb" size="medium" @click="logout()">
+              <template #icon>
+                <n-icon :size="'1.5rem'" :component="SignOut24Regular" />
               </template>
             </n-button>
           </div>
@@ -61,37 +61,37 @@
 
   
   export default defineComponent({
-	setup () {
-    const { user } = storeToRefs(useAuthStore())
-    const moment = inject('moment')
-    const date = ref()
-    const router = useRouter()
-    const loading = ref(false);
-    const clock = () =>{
-      setInterval( ()=> {
+    setup () {
+      const { user } = storeToRefs(useAuthStore())
+      const moment = inject('moment')
+      const date = ref()
+      const router = useRouter()
+      const loading = ref(false);
+      const clock = () =>{
+        setInterval( ()=> {
+          date.value = new Date
+        },1000 )
+      }
+      const logout = () => {
+        loading.value = true
+        utils.errorLogout( () => router.push('/login'))
+      }
+      onMounted(() => {
         date.value = new Date
-      },1000 )
+        clock()
+      })
+      return {
+        user,
+        moment,
+        date,
+        SignOut24Regular,
+        LineHorizontal320Filled,
+        Settings32Regular,
+        loading,
+        logout,
+      }
     }
-    const logout = () => {
-      loading.value = true
-      utils.errorLogout( () => router.push('/login'))
-    }
-    onMounted(() => {
-      date.value = new Date
-      clock()
-    })
-    return {
-      user,
-      moment,
-      date,
-      SignOut24Regular,
-      LineHorizontal320Filled,
-      Settings32Regular,
-      loading,
-      logout,
-    }
-  }
-})
+  })
 </script>
 <style lang="scss" >
 .actionCounterButton{
@@ -114,7 +114,6 @@
 
 }
 .header-counter{
-
   & .n-card__content{
     padding: 8px 10px!important;
   }
@@ -132,6 +131,9 @@
   height: 100%;
   display: flex;
   align-items: center;
+  & img {
+    width: 180px;
+  }
 }
 .items_header__user {
   color: white;
@@ -162,25 +164,38 @@
 }
 
 @media screen and (max-width: 780px){
+  
   .header-counter__section{
-    padding:4% 0px
+    padding:0px
   }
   .header-counter{
     padding-top:  2%;
-    padding: 3%;
+    padding: 0%;
     & .n-card__content{
       padding: 15px!important;
     }
   }
-  .items_header {
-    width: 75%;
-    &:nth-child(2n) {
-      display: none;
-    }
-    &:nth-child(3n) {
-      width: 25%;
-      padding:0px 0px 0px 0px;
-    }
+  .counter-header__container {
+    padding: 0% 0%;
+  }
+  .header-user___name{
+    display: none;
+  }
+  .items_header__user{
+    width: 15%;
+  }
+  .items_header__action {
+    width: 25%;
+    padding: 0px 0.5rem;
+  }
+  .items_header__hour{
+    width: 25%;
+  }
+  .items_header__img {
+    width: 35%;
+   & img{
+    width: 100%;
+   }
   }
   .action_section {
     display:flex; 

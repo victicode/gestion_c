@@ -3,7 +3,7 @@
     <section id="section-header">
       <headerCounter />
     </section>
-    <section>
+    <section id="section-counter">
       <router-view v-slot="{ Component }">
         <transition name="vertical" >
           <component :is="Component"/>
@@ -31,6 +31,9 @@
 <style lang="scss">
 #section-header{
   height: 9%;
+}
+#section-counter {
+  height: 91%;
 }
 .counter__base{
   width: 100%;
