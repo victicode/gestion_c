@@ -4,10 +4,10 @@
       <counterCurrentNumber/>
     </div>
     <div class="counter__buttons" style="">
-
+      <counterButtons :departament="departament"/>
     </div>
     <div class="counter__list" style="">
-
+      <counterList :departament="departament"/>
     </div>
   </div>
 </template>
@@ -15,38 +15,61 @@
   import { storeToRefs } from 'pinia'
   import { useAuthStore } from "@/services/store/auth.store";
   import { inject, ref, onMounted } from 'vue';
-  import { SignOut24Regular, LineHorizontal320Filled, Settings32Regular } from '@vicons/fluent'
   import utils from '@/util/httpUtil.js'
   import { useRouter } from "vue-router";
   import counterCurrentNumber from '@/components/counter/counterCurrentNumber.vue';
+  import counterButtons from '@/components/counter/counterButtons.vue';
+  import counterList from '@/components/counter/counterList.vue';
+
+  import { useDepartamentStore } from '@/services/store/departament.store';
   
   export default defineComponent({
     components: {
       counterCurrentNumber,
+      counterButtons,
+      counterList,
     },
     setup () {
       const { user } = storeToRefs(useAuthStore())
       const moment = inject('moment')
+      const emitter = inject('emitter')
       const date = ref()
       const router = useRouter()
       const loading = ref(false);
-      const clock = () =>{
-        setInterval( ()=> {
-          date.value = new Date
-        },1000 )
-      }
+      const departamentStore = useDepartamentStore()
+      const departament = ref({})
+
       const logout = () => {
         loading.value = true
         utils.errorLogout( () => router.push('/login'))
       }
+
+      const getDepartament = (inject = false) => {
+        loading.value = true
+        departamentStore.getDepartamentQueueById(user.value.departament)
+        .then((data) => {
+          departament.value = data.data
+
+          if(inject){
+            
+          }
+        }).catch((response) => {
+          message.error(response)
+          loading.value = false
+        })
+      }
+      emitter.on("updateRecipes", () => {
+          alert('lllllllll')
+        })
       onMounted(() => {
-        date.value = new Date
-        clock()
+        console.log('llll')
+        getDepartament(true)
+        
       })
       return {
         user,
         moment,
-        date,
+        departament,
       }
     }
   })
@@ -60,16 +83,20 @@
 .counter__current{
   width: 50%; 
   height: 100%; 
+  background: rgba(224, 224, 224, 0.253);
+
 }
 .counter__buttons{
   width: 20%; 
   height: 100%;  
-  background: blue;
+  background: rgba(224, 224, 224, 0.253);
+  // border-left: 5px  solid rgba(138, 138, 138, 0.514);
 }
 .counter__list{
   width: 30%; 
   height: 100%;  
-  background: yellow;
+  background: rgba(224, 224, 224, 0.253);
+
 }
 @media screen and (max-width: 780px){
   .counter__container{

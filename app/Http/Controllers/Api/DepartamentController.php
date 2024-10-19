@@ -14,7 +14,7 @@ class DepartamentController extends Controller
         return $this->returnSuccess(200, $departaments);
     }
     public function getDepartamentQueueById($id) {
-        $departament =  Departament::with('ticketsPending.client', 'currentTicket.client')->find($id);
+        $departament =  Departament::with('ticketsPending.client', 'currentTicket.client', 'ticketsByDay')->find($id);
         return $this->returnSuccess(200, $departament);
     }
     public static function getCorrelative($id) {

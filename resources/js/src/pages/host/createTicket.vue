@@ -55,7 +55,7 @@
   import clientForm from '@/components/host/ticket/clientForm.vue'
   import viewTicket from '@/components/host/ticket/viewTicket.vue';
   import { useRouter } from 'vue-router'
-  import { ref } from 'vue'
+  import { inject, onMounted, ref } from 'vue'
 
   export default defineComponent({
   components: {
@@ -64,7 +64,7 @@
     viewTicket
   },
 	setup () {
-
+    const emitter = inject('emitter')
     const loading = ref(false)
     const ticketStore = useTicketStore();
     const ticket = ref({})
@@ -84,7 +84,6 @@
     const setDepartament = (departament) => {
       dataForTicket.value.departament = departament;
       dataForTicket.value.departament_id = departament.id;
-
       validate.value = false
     }
 
@@ -103,7 +102,9 @@
       .then((response) => {
         if(response.code !== 200) throw response
         ticket.value = response.data;
+        emitter.emit('updateRecipes')
         loading.value = false;
+        console.log('aaaaaaaaaaaas')
         step.value = 3;
       })
       .catch((response) => {
@@ -127,6 +128,7 @@
       }
       
     }
+    
     return {
       step,
       loading,
