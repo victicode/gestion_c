@@ -32,11 +32,10 @@ import {
 	useMessage,
 	useDialog,
 	useNotification,
-	useLoadingBar,
 
 } from 'naive-ui'
 import { useRouter, useRoute } from 'vue-router'
-import {useAuthStore} from '@/services/store/auth.store'
+import { useAuthStore} from '@/services/store/auth.store'
 import utils from '@/util/httpUtil.js'
 
 export default defineComponent({
@@ -53,7 +52,6 @@ export default defineComponent({
 		window.$message = useMessage()
 		window.$dialog = useDialog()
 		window.$notification = useNotification()
-		window.$loadingBar = useLoadingBar()
 
     const isReady = (inject = null) => {
       readyState.value =  route.name == 'Login' 

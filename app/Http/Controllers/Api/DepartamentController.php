@@ -14,7 +14,7 @@ class DepartamentController extends Controller
         return $this->returnSuccess(200, $departaments);
     }
     public function getDepartamentQueueById($id) {
-        $departament =  Departament::with('ticketsPending.client', 'currentTicket.client', 'ticketsByDay')->find($id);
+        $departament =  Departament::withCount('ticketsAtending')->with('ticketsPending.client', 'currentTicket.client', 'ticketsByDay.client')->find($id);
         return $this->returnSuccess(200, $departament);
     }
     public static function getCorrelative($id) {
@@ -22,7 +22,7 @@ class DepartamentController extends Controller
 
         $acr = $departaments->acr;
         $number = $departaments->correlative_count + 1;
-        $cero = substr("000", strlen( (string)$departaments->correlative_count) );
+        $cero = substr("000", strlen( (string)$number) );
 
         return $acr.$cero.$number;
     }

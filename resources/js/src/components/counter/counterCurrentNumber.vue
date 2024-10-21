@@ -1,6 +1,6 @@
 <template>
   <div class="w-100 h-100">
-    <div class="h-80  numberTicket__section"  v-if="currentTicket && !loading ">
+    <div class="h-80  numberTicket__section"  v-if="Object.values(currentTicket).length > 0">
       <div class="text-center">
         <div class="title__current text-bold">Atendiendo actualmente en {{ user.name }}</div>
       </div>
@@ -8,43 +8,30 @@
         <div class="numberTicket__current--container">
           {{ currentTicket.number }}
         </div>
-        <div class="text-center text-medium" style="font-size: 1.8rem; margin-top: 1rem;">
+        <div class="text-center text-medium" style="font-size: 2rem; margin-top: 1rem;">
           {{ currentTicket.client.name }}
         </div>
       </div>
       <div class="text-center mt-3">
-        <div class="mt-2 text-bold" style="font-size: 1.5rem;">
+        <div class="mt-2 text-bold" style="font-size: 2rem;">
           Tiempo de consulta
         </div>
-        <div class="text-medium" style="font-size: 1.2rem;">
+        <div class="text-medium" style="font-size: 1.8rem;">
           {{ date }}
         </div>
       </div>
     </div>
-    <div class="noCurrent h-80" v-if="!currentTicket && !loading " >
+    <div class="noCurrent h-80" v-if="Object.values(currentTicket).length == 0" >
         <div class="text-center mt-3">
           <div class="title__current mt-3 text-bold">
             No hay ticket siendo atendido en {{ user.name }} 😞
           </div>
         </div>
     </div>
-    <div class=" h-80 numberTicket__section" v-if="loading ">
-        <div class="text-center">
-          <div class="title__current mt-3 text-bold">  
-             <n-skeleton text style="width: 60%" />
-          </div>
-        </div>
-        <div class="numberTicket__current w-100">
-            <n-skeleton text style="width: 60%; height: 150px; border-radius: 20px; margin-top: 1.5rem;" />
-        </div>
-        <div class="w-100 text-center">
-          <n-skeleton text style="width: 60%" />
-        </div>
-    </div>
     <div class="h-20 w-100 stats__counter"  >
       <div class="text-center">
         <div class="stats__counter--title">Tickets atendidos hoy</div>
-        <div class="stats__counter--value">{{ departament.tickets_by_day ? departament.tickets_by_day.length : 0 }}</div>
+        <div class="stats__counter--value">{{ departament.tickets_atending_count  }}</div>
       </div>
       <div class="text-center">
         <div class="stats__counter--title" >Limite de ticket</div>
@@ -57,27 +44,28 @@
   import { storeToRefs } from 'pinia'
   import { useAuthStore } from "@/services/store/auth.store";
   import { inject, ref, onMounted } from 'vue';
-  import { useMessage } from "naive-ui";
-  import utils from '@/util/httpUtil.js'
   import { useRouter } from "vue-router";
-  import { useDepartamentStore } from '@/services/store/departament.store';
+  import { useNotification } from 'naive-ui'
+
   
   export default defineComponent({
-    setup () {
+    props:{
+      departament: Object,
+      currentTicket: Object
+    },
+    setup (props) {
+
       const { user } = storeToRefs(useAuthStore())
       const moment = inject('moment')
       const date = ref()
-      const router = useRouter()
-      const loading = ref(false);
-      const departament = ref({})
-      const currentTicket = ref(null)
-
-      const departamentStore = useDepartamentStore()
-      const message = useMessage();
+      const notification = useNotification()
+      const departament = ref(props.departament)
+      const currentTicket = ref(props.currentTicket)
+      const interval = ref('');
 
       const clock = () =>{
         if(currentTicket.value){
-          setInterval( ()=> {
+          interval.value = setInterval( () => {
             let today = new moment();
             let product_due_date = moment(currentTicket.value.updated_at);
             let diff_due_date = Math.round(moment.duration(today.diff(product_due_date)).as('seconds'));
@@ -102,34 +90,34 @@
         }
       }
 
-      const getCurrentTicket = () => {
-        loading.value = true
-        departamentStore.getDepartamentQueueById(user.value.departament)
-        .then((data) => {
-          console.log(data)
-          departament.value = data.data
-          currentTicket.value = data.data.current_ticket 
-          setTimeout(() => {
-            clock()
-            loading.value = false
-          }, 50);
-
-        }).catch((response) => {
-          message.error(response)
-          loading.value = false
-
-        })
-      }
       
+      watch(() => props.departament, (newValue) => {
+        departament.value = newValue
+
+      });
+      watch(() => props.currentTicket, (newValue, old) => {
+        console.log(newValue)
+        console.log(old)
+
+        currentTicket.value = newValue
+        if(currentTicket.value.client){
+
+          notification.success({
+            content: 'Atendiendo a: '+ currentTicket.value.client.name,
+            duration: 2500,
+          })
+          clock() 
+        }
+      });
       onMounted(() => {
-        getCurrentTicket()  
+        clock() 
       })
 
       return {
         user,
         departament,
-        loading,
         currentTicket,
+        date,
       }
     }
   })
@@ -141,6 +129,7 @@
   padding: 1rem 3rem; 
   box-shadow: -10px 0px 10px 0px rgba(138, 138, 138, 0.514);
   border-top: 5px  solid rgba(138, 138, 138, 0.514);
+  
   &--title{
     font-size: 1.2rem;
     color:$dark;

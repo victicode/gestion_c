@@ -1,10 +1,10 @@
 <template>
-  <div class="counter__container">
+  <div class="counter__container" v-if="Object.values(departament).length > 0">
     <div class="counter__current" style="">
-      <counterCurrentNumber/>
+      <counterCurrentNumber :departament="departament" :currentTicket="currentTicket"/>
     </div>
     <div class="counter__buttons" style="">
-      <counterButtons :departament="departament"/>
+      <counterButtons :departament="departament" />
     </div>
     <div class="counter__list" style="">
       <counterList :departament="departament"/>
@@ -14,13 +14,14 @@
 <script>
   import { storeToRefs } from 'pinia'
   import { useAuthStore } from "@/services/store/auth.store";
-  import { inject, ref, onMounted } from 'vue';
+  import { ref, onMounted } from 'vue';
   import utils from '@/util/httpUtil.js'
   import { useRouter } from "vue-router";
   import counterCurrentNumber from '@/components/counter/counterCurrentNumber.vue';
   import counterButtons from '@/components/counter/counterButtons.vue';
   import counterList from '@/components/counter/counterList.vue';
-
+ 
+  import { useNotification } from 'naive-ui'
   import { useDepartamentStore } from '@/services/store/departament.store';
   
   export default defineComponent({
@@ -31,45 +32,67 @@
     },
     setup () {
       const { user } = storeToRefs(useAuthStore())
-      const moment = inject('moment')
-      const emitter = inject('emitter')
-      const date = ref()
       const router = useRouter()
       const loading = ref(false);
       const departamentStore = useDepartamentStore()
       const departament = ref({})
+      const currentTicket = ref({})
+      const notification = useNotification()
 
       const logout = () => {
-        loading.value = true
         utils.errorLogout( () => router.push('/login'))
       }
 
-      const getDepartament = (inject = false) => {
+      const getDepartament = () => {
         loading.value = true
         departamentStore.getDepartamentQueueById(user.value.departament)
         .then((data) => {
+          const old = departament.value.tickets_by_day ? departament.value.tickets_by_day.length : 0
           departament.value = data.data
-
+          setCurrentTicket(data.data.current_ticket)
+          
           if(inject){
-            
+            showNotification(old)
           }
         }).catch((response) => {
           message.error(response)
           loading.value = false
+          logout()
         })
       }
-      emitter.on("updateRecipes", () => {
-          alert('lllllllll')
-        })
+      const setCurrentTicket = (newCurrent) => {
+        if( newCurrent && newCurrent.id !== currentTicket.value.id){
+          currentTicket.value = newCurrent
+        }
+
+      }
+      const showNotification = (type) => {
+        type < departament.value.tickets_by_day.length
+        ? notification.success({
+            content: 'Se ha agregado un nuevo ticket',
+            duration: 2500,
+          })
+        : type == departament.value.tickets_by_day.length 
+        ? ''
+        : notification.warning({
+            content: 'Se ha eliminado ticket',
+            duration: 2500,
+          })
+      }
+
       onMounted(() => {
-        console.log('llll')
-        getDepartament(true)
+        getDepartament()
+        window.Echo
+        .channel('updateTicket'+user.value.departament)
+        .listen('TicketEvent', async () => {
+          getDepartament(true)
+        })
         
       })
       return {
         user,
-        moment,
         departament,
+        currentTicket,
       }
     }
   })
@@ -83,19 +106,19 @@
 .counter__current{
   width: 50%; 
   height: 100%; 
-  background: rgba(224, 224, 224, 0.253);
+  background: rgba(224, 224, 224, 0.384);
 
 }
 .counter__buttons{
   width: 20%; 
   height: 100%;  
-  background: rgba(224, 224, 224, 0.253);
+  background: rgba(224, 224, 224, 0.384);
   // border-left: 5px  solid rgba(138, 138, 138, 0.514);
 }
 .counter__list{
   width: 30%; 
   height: 100%;  
-  background: rgba(224, 224, 224, 0.253);
+  background: rgba(224, 224, 224, 0.384);
 
 }
 @media screen and (max-width: 780px){

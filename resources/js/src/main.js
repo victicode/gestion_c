@@ -5,12 +5,13 @@ import { createPinia } from "pinia";
 import router from "@/routes/index";
 import { Picker } from 'vant';
 import { Switch } from 'vant';
-import mitt from 'mitt'
+
 import 'vant/lib/index.css';
 import naiveUI from 'naive-ui'
 import Provider from '@/components/provider.vue'
 import moment from 'moment';
 import 'moment/locale/es';
+
 moment.updateLocale('es', 
   {
     months: 'Enero_Febrero_Marzo_Abril_Mayo_Junio_Julio_Agosto_Septiembre_Octubre_Noviembre_Diciembre'.split('_'),
@@ -39,17 +40,13 @@ moment.updateLocale('es',
   }
 );
 
-const emitter = mitt()
-const app = createApp(Provider)
 
+const app = createApp(Provider)
 
 app.use(createPinia())
 app.use(router)
 app.use(naiveUI)
 app.use(Picker);
 app.use(Switch);
-app.provide('emitter', emitter)
 app.provide('moment', moment)
-
-
 app.mount('#app')

@@ -17,8 +17,8 @@
 
           </div>
         </div>
-        <div v-if="!loading">
-          <div v-if="queue.tickets_pending && queue.tickets_pending.length > 0 " class="px-5">
+        <div v-if="!loading" style="overflow: auto; height: 90%; padding: 0rem 1rem;">
+          <div v-if="queue.tickets_pending && queue.tickets_pending.length > 0 " class="px-5" >
             <div v-for="ticket in queue.tickets_pending" :key="ticket.id" class="ticket__info-area mt-1">
                 <div class="ticket__init-area">
                   <div>
@@ -32,13 +32,14 @@
                   <div>
                     {{ moment(ticket.created_at).format('hh:mm:ss A') }}
                   </div>
-                  <div class="button__area">
+                  <div class="button__area" v-if="ticket.status == 1">
                     <n-button  circle type="error" @click="setTicket(ticket)" size="small">
                       <template #icon>
                         <n-icon :component="Delete24Regular" />
                       </template>
                     </n-button>
                   </div>
+                  <n-icon :component="SwipeRight24Filled" class="button__area" color="#05A952" size="1.8rem" v-else/>
                 </div>
             </div>
           </div>
@@ -80,7 +81,7 @@
   import { inject, onMounted } from 'vue';
   import { useDepartamentStore } from '@/services/store/departament.store';
   import { useMessage } from "naive-ui";
-  import { ArrowLeft12Filled, Delete24Regular } from '@vicons/fluent'
+  import { ArrowLeft12Filled, Delete24Regular, TargetArrow16Regular, SwipeRight24Filled } from '@vicons/fluent'
   import deleteTicket from '@/components/host/modal/deleteTicket.vue';
 
   export default defineComponent({
@@ -123,10 +124,17 @@
     }
     onMounted(() => {
       getQueue()
+      window.Echo
+      .channel('updateTicket'+route.params.id)
+      .listen('TicketEvent', async () => {
+        getQueue()
+      })
     })
     return {
       ArrowLeft12Filled,
       Delete24Regular,
+      TargetArrow16Regular, 
+      SwipeRight24Filled,
       loading,
       user,
       router,

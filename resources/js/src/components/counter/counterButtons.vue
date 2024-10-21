@@ -1,7 +1,7 @@
 <template>
   <div class="button-action__section" v-if="Object.values(departament).length > 0">
     <div class="button-action__item">
-      <n-button type="success" @click="actionToDo('Siguiente')">
+      <n-button type="success" @click="nextTicket()" :loading="loading == 'next'">
         Siguiente
       </n-button>
     </div>
@@ -15,23 +15,14 @@
         Posponer
       </n-button>
     </div>
-    <!-- <div class="button-action__item">
-      <n-button type="success" @click="actionToDo('Iniciar el día')" :disabled="departament.status">
-        Iniciar día
-      </n-button>
-    </div>
-    <div class="button-action__item" >
-      <n-button type="success" @click="actionToDo('Terminar día')" :disabled="!departament.status" >
-        Terminar día
-      </n-button>
-    </div> -->
   </div>
 </template>
 <script>
   import { storeToRefs } from 'pinia'
   import { useAuthStore } from "@/services/store/auth.store";
+  import { useMessage } from "naive-ui";
   import { inject, ref, onMounted, watch } from 'vue';
-
+  import { useTicketStore } from '@/services/store/ticket.store';
   
   export default defineComponent({
     props:{
@@ -41,6 +32,9 @@
       const { user } = storeToRefs(useAuthStore())
       const loading = ref('')
       const departament = ref(props.departament)
+      const ticketStore = useTicketStore()
+      const message = useMessage();
+
       const setLoading = (value) => {
         loading.value = value
       }
@@ -49,6 +43,19 @@
         alert(`Acción: ${value}`)
       }
 
+      const nextTicket = () => {
+        setLoading('next')
+        ticketStore.nextTicket(departament.value.id)
+        .then((response) => {
+          setLoading('')
+
+        })
+        .catch((response) => {
+          message.error(response);
+          setLoading('')
+
+        })
+      }
       watch(() => props.departament, (newValue) => {
         departament.value = newValue
       });
@@ -58,6 +65,7 @@
         loading,
         departament,
         actionToDo,
+        nextTicket,
       }
     }
   })
