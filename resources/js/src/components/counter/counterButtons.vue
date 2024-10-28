@@ -21,14 +21,15 @@
   import { storeToRefs } from 'pinia'
   import { useAuthStore } from "@/services/store/auth.store";
   import { useMessage } from "naive-ui";
-  import { inject, ref, onMounted, watch } from 'vue';
+  import { ref, watch } from 'vue';
   import { useTicketStore } from '@/services/store/ticket.store';
-  
+
   export default defineComponent({
     props:{
       departament: Object,
     },
-    setup (props) {
+    emits: ['selectedDepartament'],
+    setup (props, { emit }) {
       const { user } = storeToRefs(useAuthStore())
       const loading = ref('')
       const departament = ref(props.departament)
@@ -51,8 +52,11 @@
 
         })
         .catch((response) => {
-          message.error(response);
+          message.error(response.error);
           setLoading('')
+          if(response.code == 201){
+            emit('nextEmpty');
+          }
 
         })
       }

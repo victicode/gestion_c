@@ -41,8 +41,7 @@ class Departament extends Model
     public function ticketsAtending(): HasMany
     {
         return $this->hasMany(Ticket::class)
-        ->where('status','=',3)
-        ->Orwhere('status','=',2)
+        ->where('status','>=',2)
         ->whereDate('created_at', '=' , date('Y-m-d'))
         ->whereTime('created_at', '<', '23:59:59');
     }   

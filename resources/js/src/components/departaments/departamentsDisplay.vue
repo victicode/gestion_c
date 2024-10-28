@@ -71,6 +71,7 @@
       const departaments1 = ref([])
       const departaments2 = ref([])
       const departaments3 = ref([])
+      const interval = ref('')
 
       const getDepartamentList = () => {
         departamentStore.getDepartamentsWithPendingPublic()
@@ -84,28 +85,30 @@
         departaments2.value = departaments.slice(6,12)
         departaments3.value = departaments.slice(12,18)
       }
-      const colors = [
-        'white',
-        'green',
-        'black',
-        'yellow',
-        'red',
-        'blue',
-        'orange',
-        'grey',
-        'pink',
-      ]
+      const findTicket = (id) => {
 
+        if(departaments1.value.find(departament => departament.id == id)) show.value = 1
+        if(departaments2.value.find(departament => departament.id == id)) show.value = 2
+        if(departaments3.value.find(departament => departament.id == id)) show.value = 3
+      }
       onMounted(() => {
         getDepartamentList()
-        setInterval(() => {
+        interval.value = setInterval(() => {
           if(show.value == 3){
             show.value = 1 
             return
           }
           show.value++
           return
-        },6000)
+        },7000)
+
+        window.Echo
+        .channel('updateDepataments')
+        .listen('TicketEvent', async ({departament}) => {
+          getDepartamentList()
+          findTicket(departament)
+        })
+        
 
       })
       return {

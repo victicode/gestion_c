@@ -31,8 +31,7 @@ export const useTicketStore = defineStore("ticket", {
             resolve(data)
           })
           .catch((response) => {
-            console.log(response)
-            reject('Error al cliente');
+            reject(response);
           });
         }
       })

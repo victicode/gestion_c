@@ -52,6 +52,7 @@
           color.value++
           return
         },3000)
+        
       })
       return {
         colors,

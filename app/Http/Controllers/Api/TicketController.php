@@ -31,8 +31,9 @@ class TicketController extends Controller
         event(new TicketEvent($ticket->departament_id));
         return $this->returnSuccess(200, $ticket);
     }
+    
     public function nextTicket($departamentId){
-        $this->endTicket($departamentId);
+        $this->endTicket($departamentId,3);
         $ticket = Ticket::where('departament_id', $departamentId)->where('status', 1)->first();
         if(!$ticket) return $this->returnFail(201, 'No hay tickets en cola');
 
@@ -42,10 +43,30 @@ class TicketController extends Controller
 
         return $this->returnSuccess(200, $ticket);
     }
-    private function endTicket ($departamentId) {
+    public function recall($departamentId){
+
+        event(new TicketEvent($departamentId));
+
+        return $this->returnSuccess(200, true);
+    }
+    public function posNextTicket($departamentId){
+        
+        $ticket = Ticket::where('departament_id', $departamentId)->where('status', 1)->first();
+        if(!$ticket) return $this->returnFail(201, 'No hay tickets en cola');
+
+        $ticket->status = 2;
+        $ticket->save();
+
+
+        $this->endTicket($departamentId,1);
+        event(new TicketEvent($departamentId));
+
+        return $this->returnSuccess(200, $ticket);
+    }
+    private function endTicket ($departamentId, $status) {
         $ticket = Ticket::where('departament_id', $departamentId)->where('status', 2)->first();
         if(!$ticket) return ;
-        $ticket->status = 3;
+        $ticket->status = $status;
         $ticket->save();
     }
     private function setUserformat(Request $request){

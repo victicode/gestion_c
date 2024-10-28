@@ -4,7 +4,9 @@
       <counterCurrentNumber :departament="departament" :currentTicket="currentTicket"/>
     </div>
     <div class="counter__buttons" style="">
-      <counterButtons :departament="departament" />
+      <counterButtons :departament="departament" @nextEmpty="nextEmpty" />
+      <!-- <counterButtons :departament="departament" /> -->
+
     </div>
     <div class="counter__list" style="">
       <counterList :departament="departament"/>
@@ -14,13 +16,12 @@
 <script>
   import { storeToRefs } from 'pinia'
   import { useAuthStore } from "@/services/store/auth.store";
-  import { ref, onMounted } from 'vue';
+  import { ref, onMounted, inject } from 'vue';
   import utils from '@/util/httpUtil.js'
   import { useRouter } from "vue-router";
   import counterCurrentNumber from '@/components/counter/counterCurrentNumber.vue';
   import counterButtons from '@/components/counter/counterButtons.vue';
   import counterList from '@/components/counter/counterList.vue';
- 
   import { useNotification } from 'naive-ui'
   import { useDepartamentStore } from '@/services/store/departament.store';
   
@@ -43,14 +44,14 @@
         utils.errorLogout( () => router.push('/login'))
       }
 
-      const getDepartament = () => {
+      const getDepartament = (inject=null) => {
         loading.value = true
         departamentStore.getDepartamentQueueById(user.value.departament)
         .then((data) => {
           const old = departament.value.tickets_by_day ? departament.value.tickets_by_day.length : 0
           departament.value = data.data
           setCurrentTicket(data.data.current_ticket)
-          
+            
           if(inject){
             showNotification(old)
           }
@@ -79,9 +80,14 @@
             duration: 2500,
           })
       }
+      const nextEmpty = () => {
+        getDepartament()
+        currentTicket.value = {};
+      }
 
       onMounted(() => {
         getDepartament()
+
         window.Echo
         .channel('updateTicket'+user.value.departament)
         .listen('TicketEvent', async () => {
@@ -93,6 +99,7 @@
         user,
         departament,
         currentTicket,
+        nextEmpty,
       }
     }
   })
@@ -129,19 +136,19 @@
     order: 2;
     width: 100%; 
     height: 37.5%; 
-    background: red;
+    background: rgba(224, 224, 224, 0.384);
   }
   .counter__buttons{
     order: 3;
     width: 100%; 
     height: 25%;  
-    background: blue;
+    background: rgba(224, 224, 224, 0.384);
   }
   .counter__list{
     order: 1;
     width: 100%; 
     height: 37.5%;  
-    background: yellow;
+    background: rgba(224, 224, 224, 0.384);
   }
 }
 
