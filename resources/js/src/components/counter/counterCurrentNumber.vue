@@ -96,8 +96,6 @@
 
       });
       watch(() => props.currentTicket, (newValue, old) => {
-        console.log(newValue)
-        console.log(old)
 
         currentTicket.value = newValue
         if(currentTicket.value.client){

@@ -33,8 +33,9 @@ class TicketController extends Controller
     }
     
     public function nextTicket($departamentId){
+        
         $this->endTicket($departamentId,3);
-        $ticket = Ticket::where('departament_id', $departamentId)->where('status', 1)->first();
+        $ticket = Ticket::where('departament_id', $departamentId)->where('status', 1)->orderBy('updated_at', 'ASC')->first();
         if(!$ticket) return $this->returnFail(201, 'No hay tickets en cola');
 
         $ticket->status = 2;
@@ -44,22 +45,34 @@ class TicketController extends Controller
         return $this->returnSuccess(200, $ticket);
     }
     public function recall($departamentId){
+        $ticket = Ticket::where('departament_id', $departamentId)->where('status', 2)->first();
+        if($ticket){
+            event(new TicketEvent($departamentId));
 
-        event(new TicketEvent($departamentId));
+            return $this->returnSuccess(200, true);
+        }
+        return $this->returnSuccess(201, false);
 
-        return $this->returnSuccess(200, true);
     }
     public function posNextTicket($departamentId){
         
-        $ticket = Ticket::where('departament_id', $departamentId)->where('status', 1)->first();
+        $this->endTicket($departamentId,1);
+
+        $tickes = Ticket::where('departament_id', $departamentId)->where('status', 1)->orderBy('updated_at', 'ASC')->count();
+        if($tickes == 1){
+
+            event(new TicketEvent($departamentId));
+            return  $this->returnSuccess(200, $tickes);
+        }
+
+
+        $ticket = Ticket::where('departament_id', $departamentId)->where('status', 1)->orderBy('updated_at', 'ASC')->first();
         if(!$ticket) return $this->returnFail(201, 'No hay tickets en cola');
 
         $ticket->status = 2;
         $ticket->save();
 
 
-        $this->endTicket($departamentId,1);
-        event(new TicketEvent($departamentId));
 
         return $this->returnSuccess(200, $ticket);
     }

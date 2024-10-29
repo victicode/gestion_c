@@ -6,12 +6,12 @@
       </n-button>
     </div>
     <div class="button-action__item">
-      <n-button type="success" @click="actionToDo('Volver a llamar')">
+      <n-button type="success" @click="recall()" :loading="loading == 'recall'">
         Volver a llamar
       </n-button>
     </div>
     <div class="button-action__item">
-      <n-button type="success" @click="actionToDo('Posponer')" >
+      <n-button type="success" @click="posNextTicket()" :loading="loading == 'pos'">
         Posponer
       </n-button>
     </div>
@@ -28,7 +28,7 @@
     props:{
       departament: Object,
     },
-    emits: ['selectedDepartament'],
+    emits: ['nextEmpty'],
     setup (props, { emit }) {
       const { user } = storeToRefs(useAuthStore())
       const loading = ref('')
@@ -38,10 +38,6 @@
 
       const setLoading = (value) => {
         loading.value = value
-      }
-
-      const actionToDo = (value) => {
-        alert(`Acción: ${value}`)
       }
 
       const nextTicket = () => {
@@ -60,6 +56,34 @@
 
         })
       }
+      const recall = () => {
+        setLoading('recall')
+        ticketStore.recallTicket(departament.value.id)
+        .then(()=>{
+          message.success('Ticket rellamado con exito');
+          setLoading('')
+
+        }).catch((response)=>{
+          console.log(response)
+          setLoading('')
+          message.error(response);
+        })
+      }
+      const posNextTicket = () => {
+        setLoading('pos')
+        ticketStore.posNextTicket(departament.value.id)
+        .then(()=> {
+          message.success('Ticket pospuesto con exito');
+          setLoading('')
+          emit('nextEmpty');
+
+        }).catch((response)=>{
+          
+          setLoading('')
+          message.error(response);
+        })
+      }
+      
       watch(() => props.departament, (newValue) => {
         departament.value = newValue
       });
@@ -68,8 +92,9 @@
         user,
         loading,
         departament,
-        actionToDo,
+        posNextTicket,
         nextTicket,
+        recall,
       }
     }
   })

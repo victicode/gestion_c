@@ -64,8 +64,9 @@
       const setCurrentTicket = (newCurrent) => {
         if( newCurrent && newCurrent.id !== currentTicket.value.id){
           currentTicket.value = newCurrent
+          return
         }
-
+        currentTicket.value = {};
       }
       const showNotification = (type) => {
         type < departament.value.tickets_by_day.length

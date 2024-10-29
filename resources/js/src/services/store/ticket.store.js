@@ -36,6 +36,42 @@ export const useTicketStore = defineStore("ticket", {
         }
       })
     },
+    async recallTicket(data) {
+      return await new Promise((resolve, reject) => {
+        if (JwtService.getToken()) {
+          ApiService.setHeader();
+          ApiService.get("/api/ticket/recall/"+data)
+          .then(({ data }) => {
+            if(data.code !== 200) throw data;
+            resolve(data)
+          })
+          .catch((response) => {
+            if(response.code === 201) {
+              reject('No hay tickets');
+            }
+            reject(response);
+          });
+        }
+      })
+    },
+    async posNextTicket(data) {
+      return await new Promise((resolve, reject) => {
+        if (JwtService.getToken()) {
+          ApiService.setHeader();
+          ApiService.get("/api/ticket/posNext/"+data)
+          .then(({ data }) => {
+            if(data.code !== 200) throw data;
+            resolve(data)
+          })
+          .catch((response) => {
+            if(response.code === 201) {
+              reject('No hay tickets');
+            }
+            reject(response);
+          });
+        }
+      })
+    },
     async deleteTicket(ticketId) {
       return await new Promise((resolve, reject) => {
         if (JwtService.getToken()) {

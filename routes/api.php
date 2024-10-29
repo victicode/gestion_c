@@ -39,8 +39,8 @@ Route::middleware('jwt.verify')->prefix('client')->name('client.')->group(functi
 Route::middleware('jwt.verify')->prefix('ticket')->name('ticket.')->group(function () {
   Route::get('/next/{id}', [TicketController::class, 'nextTicket']);
   Route::post('/', [TicketController::class, 'createTicket']);
-  Route::post('/recall/{id}', [TicketController::class, 'recall']);
-  Route::post('/posNext/{id}', [TicketController::class, 'posNextTicket']);
+  Route::get('/recall/{id}', [TicketController::class, 'recall']);
+  Route::get('/posNext/{id}', [TicketController::class, 'posNextTicket']);
 
   Route::post('/delete/{id}', [TicketController::class, 'deleteTicket']);
 

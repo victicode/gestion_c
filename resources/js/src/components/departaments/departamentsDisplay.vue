@@ -62,7 +62,7 @@
 <script>
   import { useDepartamentStore } from '@/services/store/departament.store';
   import { ref, onMounted } from 'vue'
-
+  import eventBus from '@/services/eventBus/eventBus'
   export default defineComponent({
     setup () {
       const departamentStore = useDepartamentStore()
@@ -73,11 +73,15 @@
       const departaments3 = ref([])
       const interval = ref('')
 
-      const getDepartamentList = () => {
+      const getDepartamentList = (inject =false) => {
         departamentStore.getDepartamentsWithPendingPublic()
         .then((response) => {
           departaments.value = response.data
           separateDepartaments(departaments.value)
+          if(inject){
+            eventBus.$emit('showNewTicket')
+            goInterval()
+          }
         })
       }
       const separateDepartaments = (departaments) => {
@@ -91,8 +95,8 @@
         if(departaments2.value.find(departament => departament.id == id)) show.value = 2
         if(departaments3.value.find(departament => departament.id == id)) show.value = 3
       }
-      onMounted(() => {
-        getDepartamentList()
+
+      const goInterval = () => {
         interval.value = setInterval(() => {
           if(show.value == 3){
             show.value = 1 
@@ -100,14 +104,19 @@
           }
           show.value++
           return
-        },7000)
-
+        },8000)
+      }
+      
+      onMounted(() => {
+        getDepartamentList(false)
         window.Echo
         .channel('updateDepataments')
         .listen('TicketEvent', async ({departament}) => {
-          getDepartamentList()
+          clearInterval(interval.value)
+          getDepartamentList(true)
           findTicket(departament)
         })
+        goInterval()
         
 
       })
@@ -134,9 +143,7 @@
 .mb-0{
   margin-bottom: 0px;
 }
-.display__container{
-  padding: 0px 1rem;
-}
+
 .displayDepartament__content{
     padding: 0.5rem 8px 1.3rem 8px;
     display:flex;

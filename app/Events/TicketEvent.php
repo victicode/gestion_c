@@ -35,6 +35,7 @@ class TicketEvent implements ShouldBroadcastNow
     
         return[
             new Channel('updateTicket'. $this->departament),
+            new Channel('recall'. $this->departament),
             new Channel('updateDepataments'),
         ] ;
     }
