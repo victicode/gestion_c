@@ -62,8 +62,9 @@
         })
       }
       const setCurrentTicket = (newCurrent) => {
-        if( newCurrent && newCurrent.id !== currentTicket.value.id){
-          currentTicket.value = newCurrent
+
+        if( newCurrent){
+          currentTicket.value =  newCurrent.id !== currentTicket.value.id ? newCurrent : currentTicket.value
           return
         }
         currentTicket.value = {};

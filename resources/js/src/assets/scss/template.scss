@@ -177,10 +177,10 @@ html{
 
 .fadex-enter-from {
   opacity: 0;
-  transition-delay: 1s ;
+  transition-delay: 0.5s ;
 }
 .fadex-enter-to{
-  transition-delay: 1s ;
+  transition-delay: 0.5s ;
 
   opacity: 1;
 }
@@ -194,7 +194,7 @@ html{
 
 .fadex-enter-active,
 .fadex-leave-active{
-  transition: all 1s ease;
+  transition: all 0.5s ease;
   opacity: 0;
 }
 

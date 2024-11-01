@@ -52,7 +52,6 @@
                 {{ departament.current_ticket ? departament.current_ticket.number : '---' }}
               </n-h1>
             </div>
-            
           </div>
         </div>
       </div>
@@ -63,6 +62,7 @@
   import { useDepartamentStore } from '@/services/store/departament.store';
   import { ref, onMounted } from 'vue'
   import eventBus from '@/services/eventBus/eventBus'
+  import audio from '@/assets/audio/alert2.mp3'
   export default defineComponent({
     setup () {
       const departamentStore = useDepartamentStore()
@@ -72,14 +72,17 @@
       const departaments2 = ref([])
       const departaments3 = ref([])
       const interval = ref('')
-
-      const getDepartamentList = (inject =false) => {
+      const alert = new Audio(audio)
+      const getDepartamentList = (inject = false) => {
         departamentStore.getDepartamentsWithPendingPublic()
         .then((response) => {
           departaments.value = response.data
           separateDepartaments(departaments.value)
           if(inject){
-            eventBus.$emit('showNewTicket')
+            departaments.value = response.data
+            eventBus.$emit('showNewTicket', 
+            formatDataEmit(departaments.value.find(departament => departament.id == inject)) )
+            alert.play()
             goInterval()
           }
         })
@@ -95,11 +98,17 @@
         if(departaments2.value.find(departament => departament.id == id)) show.value = 2
         if(departaments3.value.find(departament => departament.id == id)) show.value = 3
       }
+      const formatDataEmit = (data) => {
+        return {
+          departament: data.name,
+          ...data.current_ticket
+        }
+      }
 
       const goInterval = () => {
         interval.value = setInterval(() => {
           if(show.value == 3){
-            show.value = 1 
+            show.value -= 2 
             return
           }
           show.value++
@@ -113,7 +122,7 @@
         .channel('updateDepataments')
         .listen('TicketEvent', async ({departament}) => {
           clearInterval(interval.value)
-          getDepartamentList(true)
+          getDepartamentList(departament)
           findTicket(departament)
         })
         goInterval()

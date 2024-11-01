@@ -64,7 +64,6 @@
           setLoading('')
 
         }).catch((response)=>{
-          console.log(response)
           setLoading('')
           message.error(response);
         })

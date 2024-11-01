@@ -113,9 +113,7 @@ export default defineComponent({
     &--item-text{
       width:60%;
       margin-left: 2px;
-      
     }
-
   }
   .view-ticket{
     margin-top: 1%
@@ -133,6 +131,9 @@ export default defineComponent({
     line-height: 1.4;
   }
   @media screen and (max-width: 780px){ 
+    .ticket__info--item-text{
+      width:70%;
+    }
     .text-subtitle{
       font-size:0.9rem;
     }

@@ -16,7 +16,12 @@
     </div>
     <transition name="fadex">
       <div v-if="newShow" class="newTicketUpdate">
-  
+        <div class="ticket__container">
+          <div v-for="ticket in tickets" :key="ticket.id" class="ticket__content">
+            <div style="font-size: 2.5rem;">{{ ticket.departament }}</div>
+            <div style="font-size: 8rem;">{{ ticket.number }}</div>
+          </div>
+        </div>
       </div>
     </transition>
   </div>
@@ -36,6 +41,8 @@
 
       const color = ref(0)
       const newShow = ref(false)
+      const timer = ref('')
+      const tickets = ref([])
       const colors = [
         'white',
         'green',
@@ -47,17 +54,27 @@
         'grey',
         'pink',
       ]
-      const showNew = () => {
-        newShow.value = true
+      const showNew = (data) => {
+        if(tickets.value.find(tickets => tickets.id == data.id)) return
 
-        setTimeout(() => {
+        try {
+          clearTimeout(timer.value)
+        } catch (error) {
+          
+        }
+
+        newShow.value = true
+        tickets.value.push(data)
+        
+        timer.value = setTimeout(() => {
           newShow.value = false
-        }, 4000);
+          tickets.value = []
+        }, 6000);
       }
 
       onMounted(() => {
-        eventBus.$on('showNewTicket', ()=>{
-          showNew()
+        eventBus.$on('showNewTicket', (data)=>{
+          showNew(data)
         })
 
         setInterval(() => {
@@ -74,11 +91,28 @@
         colors,
         color,
         newShow,
+        tickets,
       }
     }
   })
 </script>
 <style lang="scss">
+.ticket__container {
+  display: flex; 
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  flex-wrap: wrap;
+}
+.ticket__content {
+  background: white;
+  padding: 3rem; 
+  text-align: center; 
+  border-radius: 20px;
+  margin: 0px 1rem;
+  width: 30rem;
+}
 .display__container{
   padding: 0px 1rem;
   position: relative;
