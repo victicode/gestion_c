@@ -119,8 +119,9 @@
       onMounted(() => {
         getDepartamentList(false)
         window.Echo
-        .channel('updateDepataments')
-        .listen('TicketEvent', async ({departament}) => {
+        .channel('displayUpdate')
+        .listen('DisplayEvent', async ({departament}) => {
+          console.log('ssss')
           clearInterval(interval.value)
           getDepartamentList(departament)
           findTicket(departament)

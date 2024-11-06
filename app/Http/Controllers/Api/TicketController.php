@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Events\TicketEvent;
 use App\Models\Client;
+use App\Models\Ticket;
+use App\Events\TicketEvent;
+use App\Events\DisplayEvent;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\Ticket;
 
 class TicketController extends Controller
 {
@@ -41,14 +42,16 @@ class TicketController extends Controller
         $ticket->status = 2;
         $ticket->save();
         event(new TicketEvent($departamentId));
+        event(new DisplayEvent($departamentId));
+
 
         return $this->returnSuccess(200, $ticket);
     }
     public function recall($departamentId){
         $ticket = Ticket::where('departament_id', $departamentId)->where('status', 2)->first();
         if($ticket){
+            event(new DisplayEvent($departamentId));
             event(new TicketEvent($departamentId));
-
             return $this->returnSuccess(200, true);
         }
         return $this->returnSuccess(201, false);
@@ -62,6 +65,7 @@ class TicketController extends Controller
         if($tickes == 1){
 
             event(new TicketEvent($departamentId));
+            event(new DisplayEvent($departamentId));
             return  $this->returnSuccess(200, $tickes);
         }
 
