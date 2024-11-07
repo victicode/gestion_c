@@ -5,7 +5,7 @@
       <div class="list__container" v-if="departament.tickets_by_day.length > 0">
         <div v-for="(ticket, index) in departament.tickets_by_day " :key="index" style="" class="list__item">
           <div class="list__item--user">
-            <div style="width: 14%; font-size: 0.9rem;">
+            <div style="width: 18%; font-size: 0.9rem;">
               {{ ticket.number }}
             </div>
             <div style="margin-left: 1rem; width: 50%; font-size: 0.9rem;">

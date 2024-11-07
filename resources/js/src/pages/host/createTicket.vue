@@ -50,12 +50,12 @@
 </template>
 <script>
   import { useTicketStore  } from '@/services/store/ticket.store';
-
   import departamentSquare from '@/components/departaments/departamentsSquare.vue'
   import clientForm from '@/components/host/ticket/clientForm.vue'
   import viewTicket from '@/components/host/ticket/viewTicket.vue';
   import { useRouter } from 'vue-router'
   import { ref } from 'vue'
+  import { useMessage, useNotification } from 'naive-ui';
 
 
   export default defineComponent({
@@ -69,6 +69,8 @@
     const ticketStore = useTicketStore();
     const ticket = ref({})
     const router = useRouter()
+    const message = useMessage()
+    const notification = useNotification()
     const step = ref(1)
     const validate = ref(true)
     const dataForTicket = ref({
@@ -107,7 +109,7 @@
       })
       .catch((response) => {
         loading.value = false
-        console.log(response)
+        message.error(response.error)
       })
     }
     const actionButton = () => {

@@ -24,6 +24,7 @@ Route::middleware('jwt.verify')->prefix('user')->name('user.')->group(function (
 Route::middleware('jwt.verify')->prefix('departament')->name('departament.')->group(function () {
   Route::get('/get_pendings', [DepartamentController::class, 'getPendings']);
   Route::get('/queue/{id}', [DepartamentController::class, 'getDepartamentQueueById']);
+  Route::post('/updateLimit/{id}', [DepartamentController::class, 'updateLimit']);
 
 });
 

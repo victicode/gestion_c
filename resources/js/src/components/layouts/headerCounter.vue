@@ -18,16 +18,16 @@
           </div>
         </div> 
         <div class="items_header__hour  text-bold">
-          {{ moment(date).format('MMMM Do YYYY, h:mm:ss a') }}
+          {{ moment(date).format('MMMM Do, YYYY, h:mm:ss a') }}
         </div>    
         
         <div class="items_header__action " >
           <div class="hidden-xs">
-            <n-button  color="#fff"  class="actionCounterButton" quaternary size="large" text-color="black" style="padding:20px 10px; margin-right: 1rem;" @click="logout()" :loading="loading">
+            <!-- <n-button  color="#fff"  class="actionCounterButton" quaternary size="large" text-color="black" style="padding:20px 10px; margin-right: 1rem;" @click="logout()" :loading="loading">
               <template #icon>
                <n-icon :size="'2rem'"  :component="Settings32Regular" />
               </template>
-            </n-button>
+            </n-button> -->
             <n-button  color="#fff" class="actionCounterButton"  quaternary size="large" text-color="black" style="padding:20px 10px" @click="logout()" :loading="loading">
               <template #icon>
                <n-icon :size="'2rem'" :component="SignOut24Regular" />
@@ -35,11 +35,11 @@
             </n-button>
           </div>
           <div class="show-xs w-100" style="justify-content:space-between; ">
-            <n-button  circle color="#cbcbcb" size="medium">
+            <!-- <n-button  circle color="#cbcbcb" size="medium">
               <template #icon>
               <n-icon :size="'1.5rem'" :component="Settings32Regular" />
               </template>
-            </n-button>
+            </n-button> -->
             <n-button  circle color="#cbcbcb" size="medium" @click="logout()">
               <template #icon>
                 <n-icon :size="'1.5rem'" :component="SignOut24Regular" />
@@ -126,7 +126,7 @@
   padding: 0px 1rem;
 }
 .items_header__img {
-  width: 70%;
+  width: 65%;
   border-right: 2px solid #6d6d6d;
   height: 100%;
   display: flex;
@@ -137,7 +137,7 @@
 }
 .items_header__user {
   color: white;
-  width: 10%;
+  width: 13%;
   border-right: 2px solid #6d6d6d;
   height: 100%;
   display: flex;
@@ -146,13 +146,14 @@
 }
 .items_header__hour {
   color: white;
-  width: 10%;
+  width: 12%;
   border-right: 2px solid #6d6d6d;
   height: 100%;
   display: flex;
   align-items: center;
   text-align: center;
   justify-content: center;
+  flex-wrap: wrap
 }
 .items_header__action {
   width: 10%;

@@ -1,18 +1,28 @@
 <template>
   <div class="button-action__section" v-if="Object.values(departament).length > 0">
     <div class="button-action__item">
-      <n-button type="success" @click="nextTicket()" :loading="loading == 'next'">
+      <n-button color="#044723" @click="nextTicket()" :loading="loading == 'next'">
         Siguiente
       </n-button>
     </div>
     <div class="button-action__item">
-      <n-button type="success" @click="recall()" :loading="loading == 'recall'">
+      <n-button color="#044723" @click="recall()" :loading="loading == 'recall'">
         Volver a llamar
       </n-button>
     </div>
     <div class="button-action__item">
-      <n-button type="success" @click="posNextTicket()" :loading="loading == 'pos'">
+      <n-button color="#044723" @click="posNextTicket()" :loading="loading == 'pos'">
         Posponer
+      </n-button>
+    </div>
+    <div class="button-action__item">
+      <n-button type="warning" @click="noYet()" :loading="loading == 'history'">
+        Historial
+      </n-button>
+    </div>
+    <div class="button-action__item">
+      <n-button type="warning" @click="noYet()" :loading="loading == 'report'">
+        Reporte
       </n-button>
     </div>
   </div>
@@ -82,7 +92,9 @@
           message.error(response);
         })
       }
-      
+      const noYet = () => {
+        message.error('Función no habilitada');
+      }
       watch(() => props.departament, (newValue) => {
         departament.value = newValue
       });
@@ -94,6 +106,7 @@
         posNextTicket,
         nextTicket,
         recall,
+        noYet,
       }
     }
   })
@@ -108,7 +121,6 @@
   height: 100%;
 }
 .button-action__item{
-  
   margin-bottom: 2rem;
   display: flex;
   justify-content: center;

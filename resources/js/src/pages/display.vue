@@ -111,7 +111,7 @@
   text-align: center; 
   border-radius: 20px;
   margin: 0px 1rem;
-  width: 30rem;
+  width: 35rem;
 }
 .display__container{
   padding: 0px 1rem;

@@ -17,6 +17,13 @@ class DepartamentController extends Controller
         $departament =  Departament::withCount('ticketsAtending')->with('ticketsPending.client', 'currentTicket.client', 'ticketsByDay.client')->find($id);
         return $this->returnSuccess(200, $departament);
     }
+    public function updateLimit($id, Request $request) {
+        $departament = Departament::find($id);
+        if(!$departament) return $this->returnFail(404,'Departamento no encontrado');
+        $departament->limit = $request->limit;
+        $departament->save();
+        return $this->returnSuccess(200, $departament);
+    }
     public static function getCorrelative($id) {
         $departaments =  Departament::withCount('correlative')->find($id);
 

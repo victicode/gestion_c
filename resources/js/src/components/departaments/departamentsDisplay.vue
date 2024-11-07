@@ -121,7 +121,6 @@
         window.Echo
         .channel('displayUpdate')
         .listen('DisplayEvent', async ({departament}) => {
-          console.log('ssss')
           clearInterval(interval.value)
           getDepartamentList(departament)
           findTicket(departament)

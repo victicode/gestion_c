@@ -1,5 +1,5 @@
 <template>
-  <div class="w-100 h-100">
+  <div class="w-100 h-100 currentTicket__section" style="">
     <div class="h-80  numberTicket__section"  v-if="Object.values(currentTicket).length > 0">
       <div class="text-center">
         <div class="title__current text-bold">Atendiendo actualmente en {{ user.name }}</div>
@@ -8,7 +8,7 @@
         <div class="numberTicket__current--container">
           {{ currentTicket.number }}
         </div>
-        <div class="text-center text-medium" style="font-size: 2rem; margin-top: 1rem;">
+        <div class="text-center text-medium numberTicket__current--user" style="">
           {{ currentTicket.client.name }}
         </div>
       </div>
@@ -33,22 +33,29 @@
         <div class="stats__counter--title">Tickets atendidos hoy</div>
         <div class="stats__counter--value">{{ departament.tickets_atending_count  }}</div>
       </div>
-      <div class="text-center">
+      <div class="text-center updateLimit">
         <div class="stats__counter--title" >Limite de ticket</div>
-        <div class="stats__counter--value">{{ departament.limit ?? 0 }}</div>
+        <div class="stats__counter--value" @click="modalStatus(true)">
+          <div>
+            {{ departament.limit ?? 0 }}
+          </div>
+        </div>
       </div>
     </div>
+    <updateLimitTicket :dialog="dialog" :departament="departament" @hiddeModal="modalStatus(false)" @update="updateLimit" />
   </div>
 </template>
 <script>
   import { storeToRefs } from 'pinia'
   import { useAuthStore } from "@/services/store/auth.store";
   import { inject, ref, onMounted } from 'vue';
-  import { useRouter } from "vue-router";
   import { useNotification } from 'naive-ui'
-
+  import updateLimitTicket from '@/components/counter/modals/updateLimitTicket.vue';
   
   export default defineComponent({
+    components: {
+      updateLimitTicket
+    },
     props:{
       departament: Object,
       currentTicket: Object
@@ -62,6 +69,7 @@
       const departament = ref(props.departament)
       const currentTicket = ref(props.currentTicket)
       const interval = ref('');
+      const dialog = ref(false);
 
       const clock = () =>{
         if(currentTicket.value){
@@ -89,17 +97,20 @@
           }, 1000 )
         }
       }
-
       
+      const modalStatus = (status) => {
+        dialog.value = status
+      }
+      const updateLimit = (newLimit) => {
+        departament.value.limit = newLimit
+        modalStatus(false)
+      }
       watch(() => props.departament, (newValue) => {
         departament.value = newValue
-
       });
       watch(() => props.currentTicket, (newValue, old) => {
-
         currentTicket.value = newValue
         if(currentTicket.value.client){
-
           notification.success({
             content: 'Atendiendo a: '+ currentTicket.value.client.name,
             duration: 2500,
@@ -107,31 +118,78 @@
           clock() 
         }
       });
+
       onMounted(() => {
         clock() 
       })
 
       return {
         user,
+        dialog,
         departament,
         currentTicket,
         date,
+        modalStatus,
+        updateLimit,
       }
     }
   })
 </script>
 <style lang="scss">
+.currentTicket__section{
+  padding: 0px 0.5rem;
+}
+.updateLimit{
+  cursor: pointer;
+  & .stats__counter--value{
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    & > div {
+      transition: all 0.5s ease;
+      z-index: 24;
+    }
+    &::before{
+      transition: all 0.5s ease;
+      content: '';
+      display: block;
+      position: absolute;
+      height: 60px;
+      width: 0px;
+      background: #044723;
+      border-radius: 5px;
+      // top: calc();
+      z-index: 1;
+    }
+  }
+  &:hover > .stats__counter--value {
+    color: #fff;
+    &::before {
+      width: 60px;
+    }
+  }
+}
 .stats__counter{
   display: flex; 
   justify-content: space-between; 
   padding: 1rem 3rem; 
-  box-shadow: -10px 0px 10px 0px rgba(138, 138, 138, 0.514);
-  border-top: 5px  solid rgba(138, 138, 138, 0.514);
+  box-shadow: 0px 0px 5px 0px rgba(138, 138, 138, 0.514);
+  border-top: 4px  solid rgba(138, 138, 138, 0.514);
+  border-right: 4px  solid rgba(138, 138, 138, 0.514);
+  border-left: 4px  solid rgba(138, 138, 138, 0.514);
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  background: transparent;
   
   &--title{
-    font-size: 1.2rem;
-    color:$dark;
+    background: #044723;
+    color: white;
+    padding:0.1rem 0.8rem;
+    font-size: 1.1rem;
     font-weight: 600;
+    border-radius: 0.2rem;
   }
   &--value{
     font-size: 2.8rem;
@@ -164,6 +222,7 @@
   font-size: 1.8rem;
 }
 .subtitle__current{
+  
   font-size: 1.6rem;
 }
 .numberTicket__current{
@@ -173,11 +232,20 @@
   justify-content: center;
   width: 100%;
   &--container{
-    border: 4px solid $primary;
+    border: 4px solid #044723;
+    background: #044723;
+    color: white;
     margin-top: 2rem;
     border-radius: 20px;
     font-size: 6rem;
-    padding: 0.9rem;
+    padding: 1rem;
+  }
+  &--user{
+    font-size: 2rem; margin-top: 1rem; 
+    border-radius: 10px;
+    padding: 0px 15px;
+    background: #044723;
+    color: white;
   }
 }
 </style>

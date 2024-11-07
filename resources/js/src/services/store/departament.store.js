@@ -48,6 +48,22 @@ export const useDepartamentStore = defineStore("departament", {
           });
         }
       })
+    },
+    async updateLimit(data) {
+      return await new Promise((resolve, reject) => {
+        if (JwtService.getToken()) {
+          ApiService.setHeader();
+          ApiService.post("/api/departament/updateLimit/"+data.id, data)
+          .then(({ data }) => {
+            if(data.code !== 200) throw data;
+            resolve(data)
+          })
+          .catch((response) => {
+            console.log(response)
+            reject('Error al obtener el departamento');
+          });
+        }
+      })
     } 
   },
 });
