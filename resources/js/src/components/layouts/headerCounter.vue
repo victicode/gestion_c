@@ -3,7 +3,7 @@
     <div  class=" header-counter__section w-100 h-100" >
       <div class="counter-header__container h-100">
         <div class="items_header__img " >
-          <img src="https://siamtel.lara.gob.ve/fundacion-siamtel/wp-content/uploads/2021/02/cintillo.png"   style="filter: grayscale(2) brightness(100);"/>
+          <img src="https://gestionc.victicodedev.com/public/images/logo/cintillo.png"   style="filter: grayscale(2) brightness(100);"/>
         </div>
         <div class="items_header__user  text-bold">
           <n-avatar

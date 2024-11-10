@@ -79,7 +79,14 @@ export default defineComponent({
     }
     const exceptionsToShow = () => {
       const user = useAuthStore().user;
-      if(route.name == 'Login' || route.name == 'waitRoom') {
+      const includesList = [
+        'appointmentLogin',
+        'Login',
+        'waitRoom',
+        'appointmentCreate',
+      ] 
+      console.log()
+      if(includesList.includes(route.name)) {
         readyState2.value = true
         return true
       }
@@ -136,7 +143,7 @@ export default defineComponent({
 .app-layout {
   background: $primary !important;
   &::before{
-    background-image: url('https://siamtel.lara.gob.ve/fundacion-siamtel/sistema-siamtel/assets/imagenes/logo/logo.svg');
+    background-image: url('https://gestionc.victicodedev.com/public/images/logo/logo.svg');
     content: '';
     position: absolute;
     z-index: 0;

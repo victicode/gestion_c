@@ -30,6 +30,7 @@ Route::middleware('jwt.verify')->prefix('departament')->name('departament.')->gr
 
 Route::prefix('departament')->name('departament.')->group(function () {
   Route::get('/display', [DepartamentController::class, 'getPendings']);
+  Route::get('/appointment', [DepartamentController::class, 'getWithLimit']);
 
 });
 

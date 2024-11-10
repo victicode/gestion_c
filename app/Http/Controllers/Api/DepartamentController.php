@@ -24,6 +24,21 @@ class DepartamentController extends Controller
         $departament->save();
         return $this->returnSuccess(200, $departament);
     }
+    public function getWithLimit(){
+        return $this->returnSuccess(200, $this->formatWithLimit());
+    }
+    private function formatWithLimit(){
+        $departaments =  Departament::withCount('ticketsAtending')->get();
+        $format = [];
+        foreach ($departaments as $key ) {
+            array_push($format,[
+                'id'        =>  $key->id,
+                'name'      =>  $key->name,
+                'disabled'  =>  $key->limit == 0 ? false : $key->limit == $key->tickets_atending_count,
+            ]);
+        }
+        return $format;
+    }
     public static function getCorrelative($id) {
         $departaments =  Departament::withCount('correlative')->find($id);
 

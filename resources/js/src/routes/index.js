@@ -27,6 +27,25 @@ const routes = [
     },
     beforeEnter: guest,
   },
+  { 
+    path: '/appointment/login', 
+    component: () => import('@/pages/appointment/login.vue'),
+    name:'appointmentLogin',
+    meta: {
+      title : 'Iniciar sesion'
+    },
+    beforeEnter: guest,
+  },
+  
+  { 
+    path: '/appointment/new', 
+    component: () => import('@/pages/appointment/appointment.vue'),
+    name:'appointmentCreate',
+    meta: {
+      title : 'Crea una nueva cita'
+    },
+    beforeEnter: guest,
+  },
 
   { 
     path: '/', 
