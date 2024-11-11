@@ -11,7 +11,7 @@
           <n-form ref="formTicket" :model="client" :rules="rules" class="clientTicketForm">
             <n-form-item label="Departamento" style="" class="">
               <n-select
-                v-model:value="departament"
+                v-model:value="client.dep"
                 filterable
                 clearable
                 placeholder="Departamento al cual asistiré"  
@@ -21,7 +21,7 @@
                 class=""
                 menu-size="large"
                 :options="departaments"
-                @update:value="updateDepartament"
+                @update:value="validateToSend"
               />
             </n-form-item>
             <div style="display:flex; flex-wrap:wrap; margin-top:1%">
@@ -33,6 +33,7 @@
                   clearable 
                   size="large" 
                   maxlength="8" 
+                  @input="validateToSend()"
                   :allow-input="onlyAllowNumber"
                 />
               </n-form-item>
@@ -43,7 +44,7 @@
                   placeholder="Nombre completo" 
                   clearable 
                   size="large"
-                  @keyup="validateToSend()"
+                  @input="validateToSend()"
                   :allow-input="onlyName"
                 />
               </n-form-item>
@@ -56,7 +57,7 @@
                   size="large" 
                   maxlength="11"
                   :allow-input="onlyAllowNumber"
-                  @keyup="validateToSend()"
+                  @input="validateToSend()"
                 />
               </n-form-item>
               <n-form-item path="email" label="Correo electrónico (opcional)" style="" class="items__ticket-form">
@@ -84,7 +85,9 @@ import { useClientStore } from '@/services/store/client.store.js'
 import { useDepartamentStore } from "@/services/store/departament.store";
 
 export default defineComponent({
-  props: {},
+  props: {
+    'dataClient': Object
+  },
   emits: ['selectedUser'],
   setup (props, { emit }) {
     const clientStore = useClientStore()
@@ -97,13 +100,15 @@ export default defineComponent({
     
     const message = useMessage();
     const loadingInput = ref(true)
+
+    console.log(props)
     const client = ref({
-      id: '',
-      name: '',
-      ci:'',
-      phone: '',
-      email: '',
-      dep: ''
+      id:  props.dataClient.id ?? null,
+      name:  props.dataClient.name ?? '',
+      ci: props.dataClient.ci ?? '',
+      phone:  props.dataClient.phone ?? '',
+      email:  props.dataClient.email ?? '',
+      dep: props.dataClient.departament ?? 0
     });
 
     const rules = {
@@ -199,13 +204,12 @@ export default defineComponent({
 
     const validateToSend = () =>  {
       let check = true
+      if(!client.value.ci) check = false
       if(!client.value.name) check = false
       if(!client.value.phone || client.value.phone.length < 11)  check = false
-      if(!departament.value)  check = false
-
-      if(check){
-        emit('selectedUser', {...client.value, check})
-      }
+      if(!client.value.dep)  check = false
+      emit('selectedUser', {...client.value, check})
+      
     }
     
     const getDepartaments = () =>{
@@ -218,10 +222,6 @@ export default defineComponent({
         ]
       })
     }
-    const updateDepartament = (value, option) => {
-        // console.log(value)
-        validateToSend()
-    }
     onMounted(() => {
       getDepartaments()
     })
@@ -230,11 +230,9 @@ export default defineComponent({
       formTicket,
       client,
       rules,
-      departament,
       departaments,
       loadingInput,
       validateToSend,
-      updateDepartament,
       searchClient,
       onlyAllowNumber: (value) => !value || /^\d+$/.test(value),
       onlyName: (value) => !value || !/[0-9,%"'=@:();&|<>]/.test(value),

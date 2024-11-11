@@ -3,24 +3,31 @@
     <div class="host-container">
       <transition name="horizontal">
         <div  class=" px-0 w-100 h-100" style="max-height:100%;" v-show="step==1">
-          <clientForm :departament="dataForTicket.departament" @selectedUser="setClient" />
+          <clientForm  :dataClient="dataForTicket" @selectedUser="setClient" />
+        </div>
+      </transition>
+      <transition name="horizontal">
+        <div  class=" px-0 w-100 h-100" style="max-height:100%;" v-show="step==2">
+          <dayPicker  @selectedUser="setClient" />
         </div>
       </transition>
     </div>
     <div  class="w-100 bottom-banner-app" >
-      <div class="h-100 button__section" v-if="step!==1 && step!== 3 ">
-        <n-button 
-          color="#616161" 
-          strong 
-          round 
-          size="large" 
-          class="button_action__bottom_bar-app" 
-          
-          @click="step == 1 ? router.push('/host') : step--; validate=false"
-        >
-          Volver
-        </n-button>
-      </div> 
+      <transition name="fadex">
+        <div class="h-100 button__section" v-if="step!==1 && step!== 3 ">
+          <n-button 
+            color="#616161" 
+            strong 
+            round 
+            size="large" 
+            class="button_action__bottom_bar-app--back" 
+            
+            @click="step == 1 ? router.push('/host') : step--; validate=false"
+          >
+            Volver
+          </n-button>
+        </div> 
+      </transition>
       <div class="h-100 button__section">
         <n-button 
           color="#fff" 
@@ -41,6 +48,7 @@
 <script>
   import { useTicketStore  } from '@/services/store/ticket.store';
   import clientForm from '@/components/appointment/clientForm.vue';
+  import dayPicker from '@/components/appointment/dayPicker.vue';
   import { useRouter } from 'vue-router'
   import { ref } from 'vue'
   import { useMessage, useNotification } from 'naive-ui';
@@ -49,6 +57,7 @@
   export default defineComponent({
   components: {
     clientForm,
+    dayPicker,
   },
 	setup () {
     const loading = ref(false)
@@ -57,7 +66,7 @@
     const router = useRouter()
     const message = useMessage()
     const notification = useNotification()
-    const step = ref(1)
+    const step = ref(2)
     const validate = ref(true)
     const dataForTicket = ref({
       ci: '',
@@ -65,8 +74,7 @@
       phone: '', 
       email: '', 
       client_id: '',
-      departament: {},
-      departament_id:null
+      departament: 0,
     })
 
     const setDepartament = (departament) => {
@@ -81,8 +89,10 @@
       dataForTicket.value.phone = client.phone;
       dataForTicket.value.email = client.email;
       dataForTicket.value.client_id = client.id;
+      dataForTicket.value.departament = client.dep;
+      // dataForTicket.value.departament_id = departament.id;
 
-      validate.value = false
+      validate.value = !client.check
     }
     const createTicket = () => {
       loading.value = true

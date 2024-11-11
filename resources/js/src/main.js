@@ -11,6 +11,10 @@ import naiveUI from 'naive-ui'
 import Provider from '@/components/provider.vue'
 import moment from 'moment';
 import 'moment/locale/es';
+import { setupCalendar } from 'v-calendar';
+
+
+// Use plugin with optional defaults
 
 moment.updateLocale('es', 
   {
@@ -48,5 +52,6 @@ app.use(router)
 app.use(naiveUI)
 app.use(Picker);
 app.use(Switch);
+app.use(setupCalendar, {})
 app.provide('moment', moment)
 app.mount('#app')

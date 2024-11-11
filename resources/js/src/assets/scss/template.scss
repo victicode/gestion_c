@@ -295,12 +295,19 @@ html{
   border-radius: 10px;
   width: 15em;
   transition: all 0.3s ease-in-out;
-  &:hover{
+  &--back{
+    box-shadow:0px 5px 10px 0px rgba(0, 0, 0, 0.747);
+    padding:30px!important;
+    border-radius: 10px;
+    width: 15em;
+    transition: all 0.3s ease-in-out;
+  }
+  &:hover, &--back:hover{
     color: #05A952!important;
     transform: scale(1.05);
 
   }
-  &:active{
+  &:active, &--back:active{
     color: #3b3b3b!important;
 
   }
