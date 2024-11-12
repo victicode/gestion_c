@@ -12,6 +12,10 @@ Route::prefix('auth')->name('user.')->group(function () {
   Route::post('/login', [AuthController::class, 'login']);
   Route::middleware('jwt.verify')->get('/logout', [AuthController::class, 'logout']);
   Route::middleware('jwt.verify')->get('/current_user', [AuthController::class, 'getUser']);
+});
+
+Route::prefix('public')->group(function () {
+  Route::post('/avaibleHour/get', [TicketController::class, 'getHourAvaibleByDay']);
 
 });
 

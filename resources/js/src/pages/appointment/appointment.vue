@@ -8,7 +8,7 @@
       </transition>
       <transition name="horizontal">
         <div  class=" px-0 w-100 h-100" style="max-height:100%;" v-show="step==2">
-          <dayPicker  @selectedUser="setClient" />
+          <dayPicker :departament="dataForTicket.departament" @selectedUser="setClient" />
         </div>
       </transition>
     </div>

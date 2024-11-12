@@ -1,23 +1,56 @@
 <template>
-  <div class="form__container-date mt-3"> 
+  <div class="form__container-date mt-2"> 
     <n-card  class="host-page px-0 w-100 h-100" style="max-height:100%" >
       <div>
         <div class="flex justify-between items-center w-100">
           <div class=" text-h5 " style="margin-bottom:5px">Selecciona la fecha y la hora de tu consulta🩺 </div>
           <div class=" text-h5 " style="margin-bottom:5px">Paso 2/3</div>
         </div>
-        <div class=" text-h2 w-100 text-bold " style="margin-bottom:5px">Selecciona el día</div>
-        <div class="form-ticket">
-          <DatePicker v-model="date" :color="'green'"  style="width: 100%;" class="appointment-calendar"/>
+        <div class=" text-h2 w-100 text-bold " style="margin-bottom:15px">Selecciona el día</div>
+        <div class="">
+          <DatePicker 
+          v-model="dateAppointment" 
+          :disabled-dates="disabledDates" 
+          :color="'green'"  
+          style="width: 100%;" 
+          :min-date="new Date()" 
+          :max-date="moment().add(setLefDay(), 'days').format()" 
+          is-required
+          @update:modelValue="getAvaibleHour"
+          class="appointment-calendar"/>
+        </div>
+        <div class="footer__container">
+          <div class="footer__section">
+            <n-select
+                v-model:value="hourAppointment"
+                filterable
+                clearable
+                placeholder="Selecciona la hora"  
+                size="large"
+                label-field="hour"
+                value-field="id"
+                style=""
+                menu-size="large"
+                :options="avaibleHour"
+                :disabled="avaibleHour.length == 1 "
+              />
+          </div>
+          <div class="footer__section" style=" display: flex; align-items: end; flex-direction: column"> 
+            <div class=" text-h5 text-bold " style="margin-top:1rem">Fecha Seleccionada</div>
+            <div style="font-size: 1.2rem;margin-top:0.5rem">
+              {{  dateAppointment ? moment(dateAppointment).format('DD/MM/YYYY') : '--/--/----' }}  
+              {{ hourAppointment == 0 ? '--:-- --' : avaibleHour.find((hour) => hour.id == hourAppointment).hour }}
+            </div>
+          </div>
         </div>
       </div>
     </n-card>
   </div>
 </template>
 <script>
-import { defineComponent, onMounted, ref, watch} from "vue";
+import { defineComponent, onMounted, ref, watch, inject} from "vue";
 import { useMessage } from "naive-ui";
-import { useDepartamentStore } from "@/services/store/departament.store";
+import { useTicketStore } from "@/services/store/ticket.store";
 import { Calendar, DatePicker } from 'v-calendar';
 import 'v-calendar/style.css';
 
@@ -26,18 +59,73 @@ export default defineComponent({
     Calendar,
     DatePicker,
   },
-  props: {},
+  props: {
+    'departament': Number,
+  },
   emits: ['selectedUser'],
   setup (props, { emit }) {
+    const moment = inject('moment')
+    const ticketStore = useTicketStore()
+    const departament =  1;
+    const dateAppointment = ref()
+    const hourAppointment = ref(0)
+    const disabledDates = ref([])
+    const avaibleHour = ref([
+      {id:0, hour:'Selecciona la hora de tu cita'},
+    ])
+
+    const getAvaibleHour = () => {
+      resetHour()
+      const data = {
+        day:    moment(dateAppointment.value).format('D'),
+        month:  moment(dateAppointment.value).format('M'),
+        departament,
+      }
+
+      ticketStore.getAvaibleHoursByDay(data)
+      .then((response) =>{
+        avaibleHour.value = [
+          {id:0, hour:'Selecciona la hora de tu cita'},
+          ...response.data
+        ]
+      })
+      .catch((response) => {
+        console.log(response)
+
+      })
+    }
+    const setLefDay = ()  => {
+      return 7 - parseInt(moment().format('d')) -2
+    }
+    const resetHour = () => {
+      hourAppointment.value =0
+      avaibleHour.value = [
+        {id:0, hour:'Cargando...'},
+      ] 
+    }
+
 
     return {
-      date: new Date(),
+      dateAppointment,
+      disabledDates,
+      hourAppointment,
+      avaibleHour,
+      moment,
+      getAvaibleHour,
+      setLefDay,
     };
   }
 });
 </script>
 <style lang="scss">
-
+  .footer__container{
+    display: flex;
+    align-items: center;
+  }
+  .footer__section{
+    width: 50%;
+    
+  }
   .n-base-select-menu .n-base-select-option.n-base-select-option--show-checkmark{
     margin-top: 10px;
   }
@@ -49,19 +137,34 @@ export default defineComponent({
     }
   }
   .appointment-calendar {
-    
+    & .vc-day-box-center-center{
+      width: auto!important;
+    }
+    & .vc-header{
+
+      height: 50px;
+    }
     & .vc-attr{
       font-size: 20px;
       height: 40px;
-  
+      width: 40px;
+    }
+    & .vc-title{
+      font-size: 20px;
+      height: 40px;
+      margin-bottom: 20px;
+
     }
     & .vc-highlight{
-      height: 40px;
-      width: 40px;
+      height: 35px;
+      width: 35px;
     }
   }
   
   @media screen and (max-width: 780px){ 
+    .footer__section{
+      width: 100%;
+    }
     .form__container-date{
       padding: 0px 2%;
       & .n-card.n-card--bordered {

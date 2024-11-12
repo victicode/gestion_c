@@ -1,5 +1,5 @@
 <template>
-  <div class="form__container mt-3"> 
+  <div class="form__container mt-2"> 
     <n-card  class="host-page px-0 w-100 h-100" style="max-height:100%" >
       <div>
         <div class="flex justify-between items-center w-100">

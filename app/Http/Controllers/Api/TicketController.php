@@ -9,6 +9,7 @@ use App\Events\DisplayEvent;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Departament;
+use App\Models\Hour;
 
 class TicketController extends Controller
 {
@@ -85,6 +86,22 @@ class TicketController extends Controller
         event(new DisplayEvent($departamentId));
 
         return $this->returnSuccess(200, $ticket);
+    }
+    public function getHourAvaibleByDay(Request $request){
+        $hour = Hour::all();
+        $tickets = Ticket::where('departament_id', $request->departament)
+        ->whereMonth('created_at', $request->month)
+        ->whereDay('created_at', $request->day)->get();
+        
+        if(count($tickets) == 0) return $this->returnSuccess(200, $hour);
+        
+
+
+        return $this->returnSuccess(200, [$tickets, $hour]);
+
+    }
+    private function filterAvaibleHourByDay($tickets, $hour){
+
     }
     private function endTicket ($departamentId, $status) {
         $ticket = Ticket::where('departament_id', $departamentId)->where('status', 2)->whereDate('created_at', '=' , date('Y-m-d'))
