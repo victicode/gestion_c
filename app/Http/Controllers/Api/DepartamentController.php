@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
+use App\Models\Ticket;
 use App\Models\Departament;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class DepartamentController extends Controller
 {
@@ -17,6 +18,7 @@ class DepartamentController extends Controller
         $departament =  Departament::withCount('ticketsAtending')->with('ticketsPending.client', 'currentTicket.client', 'ticketsByDay.client')->find($id);
         return $this->returnSuccess(200, $departament);
     }
+    
     public function updateLimit($id, Request $request) {
         $departament = Departament::find($id);
         if(!$departament) return $this->returnFail(404,'Departamento no encontrado');
@@ -27,6 +29,7 @@ class DepartamentController extends Controller
     public function getWithLimit(){
         return $this->returnSuccess(200, $this->formatWithLimit());
     }
+    
     private function formatWithLimit(){
         $departaments =  Departament::withCount('ticketsAtending')->get();
         $format = [];
@@ -39,11 +42,14 @@ class DepartamentController extends Controller
         }
         return $format;
     }
-    public static function getCorrelative($id) {
-        $departaments =  Departament::withCount('correlative')->find($id);
+    public static function getCorrelative($id, $date) {
+        $departaments =  Departament::find($id);
+        $correlative = Ticket::where('departament_id', $id)->whereDate('created_at', '=' , $date)
+        ->whereTime('created_at', '<', '23:59:59')
+        ->withTrashed()->count();
 
         $acr = $departaments->acr;
-        $number = $departaments->correlative_count + 1;
+        $number = $correlative + 1;
         $cero = substr("000", strlen( (string)$number) );
 
         return $acr.$cero.$number;

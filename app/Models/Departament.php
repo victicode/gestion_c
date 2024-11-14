@@ -12,6 +12,7 @@ class Departament extends Model
 {
     use HasFactory, SoftDeletes;
     protected $fillable = ['name','type','correlativo', 'limit'];
+    
 
     public function allTickets(): HasMany
     {
@@ -22,13 +23,6 @@ class Departament extends Model
         return $this->hasMany(Ticket::class)
         ->whereDate('created_at', '=' , date('Y-m-d'))
         ->whereTime('created_at', '<', '23:59:59');
-    }
-    public function correlative(): HasMany
-    {
-        return $this->hasMany(Ticket::class)
-        ->whereDate('created_at', '=' , date('Y-m-d'))
-        ->whereTime('created_at', '<', '23:59:59')
-        ->withTrashed();
     }
     public function ticketsPending(): HasMany
     {

@@ -20,6 +20,18 @@ export const useTicketStore = defineStore("ticket", {
         }
       })
     },
+    async createTicketPublic(data) {
+      return await new Promise((resolve, reject) => {
+        ApiService.post("/api/public/createTicket", data)
+        .then(({ data }) => {
+          if(data.code !== 200) throw data;
+          resolve(data)
+        })
+        .catch((response) => {
+          reject(response);
+        });
+      })
+    },
     async nextTicket(data) {
       return await new Promise((resolve, reject) => {
         if (JwtService.getToken()) {
@@ -90,6 +102,19 @@ export const useTicketStore = defineStore("ticket", {
     async getAvaibleHoursByDay(data){
       return await new Promise((resolve, reject) => {
         ApiService.post("/api/public/avaibleHour/get", data)
+        .then(({ data }) => {
+          if(data.code !== 200) throw data;
+          resolve(data)
+        })
+        .catch((response) => {
+          console.log(response)
+          reject('Error al obtener departamento');
+        });
+      })
+    },
+    async getNotAvaibleDay(data){
+      return await new Promise((resolve, reject) => {
+        ApiService.post("/api/public/notAvaibleDay/get", data)
         .then(({ data }) => {
           if(data.code !== 200) throw data;
           resolve(data)

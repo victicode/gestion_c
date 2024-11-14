@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Ticket extends Model
 {
     use HasFactory, SoftDeletes;
-    protected $fillable = ['number', 'client_id', 'departament_id', 'type', 'status'];
+    protected $fillable = ['number', 'client_id', 'departament_id', 'type', 'status', 'hour', 'created_at'];
 
     public function client(): BelongsTo
     {

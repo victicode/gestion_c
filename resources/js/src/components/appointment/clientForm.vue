@@ -1,12 +1,12 @@
 <template>
-  <div class="form__container mt-2"> 
+  <div class="form__container mt-1"> 
     <n-card  class="host-page px-0 w-100 h-100" style="max-height:100%" >
       <div>
-        <div class="flex justify-between items-center w-100">
-          <div class=" text-h5 " style="margin-bottom:5px">Bienvenidos a nuestro sistema de citas🩺 </div>
+        <div class="flex justify-between items-center w-100 title__container" style="flex-wrap: nowrap" >
+          <div class=" text-h5 " style="margin-bottom:5px; width: 70%">Bienvenidos a nuestro sistema de citas🩺 </div>
           <div class=" text-h5 " style="margin-bottom:5px">Paso 1/3</div>
         </div>
-        <div class=" text-h2 w-100 text-bold " style="margin-bottom:5px">Ingresa tus datos</div>
+        <div class=" text-h2 w-100 text-bold title2__container " style="margin-bottom:5px">Ingresa tus datos</div>
         <div class="form-ticket">
           <n-form ref="formTicket" :model="client" :rules="rules" class="clientTicketForm">
             <n-form-item label="Departamento" style="" class="">
@@ -33,6 +33,7 @@
                   clearable 
                   size="large" 
                   maxlength="8" 
+                  @change="searchClient()"
                   @input="validateToSend()"
                   :allow-input="onlyAllowNumber"
                 />
@@ -40,7 +41,8 @@
               <n-form-item path="name" label="Nombre completo" style="" class="items__ticket-form">
                 <n-input 
                   v-model:value="client.name" 
-                  type="text" 
+                  type="text"
+                  :disabled="loadingInput" 
                   placeholder="Nombre completo" 
                   clearable 
                   size="large"
@@ -51,7 +53,8 @@
               <n-form-item path="phone" label="Teléfono" style="" class="items__ticket-form">
                 <n-input 
                   v-model:value="client.phone" 
-                  type="text" 
+                  type="text"
+                  :disabled="loadingInput" 
                   placeholder="Número telefónico" 
                   clearable 
                   size="large" 
@@ -63,7 +66,8 @@
               <n-form-item path="email" label="Correo electrónico (opcional)" style="" class="items__ticket-form">
                 <n-input 
                   v-model:value="client.email" 
-                  type="text" 
+                  type="text"
+                  :disabled="loadingInput" 
                   placeholder="Correo@gmail.com" 
                   clearable 
                   size="large"
@@ -95,20 +99,16 @@ export default defineComponent({
 
     const formTicket = ref(null);
     const departaments = ref([]);
-    const departament = ref(0);
 
-    
-    const message = useMessage();
     const loadingInput = ref(true)
 
-    console.log(props)
     const client = ref({
       id:  props.dataClient.id ?? null,
       name:  props.dataClient.name ?? '',
       ci: props.dataClient.ci ?? '',
       phone:  props.dataClient.phone ?? '',
       email:  props.dataClient.email ?? '',
-      dep: props.dataClient.departament ?? 0
+      dep: props.dataClient.departament_id ?? 0
     });
 
     const rules = {
@@ -174,7 +174,7 @@ export default defineComponent({
       loadingInput.value = true
       loadingInputAction()
 
-      clientStore.getClientByCi(client.value.ci)
+      clientStore.getClientByCiPublic(client.value.ci)
       .then((response) => {
         setUser(response.data ?? {})
         if(!response.data) { 
@@ -182,7 +182,7 @@ export default defineComponent({
           return
         }
         formTicket.value?.validate()
-        emit('selectedUser', {...client.value, check:false})
+        validateToSend()
       })
       .catch((response) => {
         console.log()

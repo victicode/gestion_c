@@ -7,12 +7,17 @@
         </div>
       </transition>
       <transition name="horizontal">
-        <div  class=" px-0 w-100 h-100" style="max-height:100%;" v-show="step==2">
-          <dayPicker :departament="dataForTicket.departament" @selectedUser="setClient" />
+        <div  class=" px-0 w-100 h-100" style="max-height:100%;" v-if="step==2">
+          <dayPicker :departament="dataForTicket.departament_id"  @selectedDayTime="setDayTime" />
+        </div>
+      </transition>
+      <transition name="horizontal">
+        <div  class=" px-0 w-100 h-100" style="max-height:100%;" v-if="step==3">
+          Bien!!!
         </div>
       </transition>
     </div>
-    <div  class="w-100 bottom-banner-app" >
+    <div  class="w-100 bottom-banner-app "  style="padding:0rem 0rem">
       <transition name="fadex">
         <div class="h-100 button__section" v-if="step!==1 && step!== 3 ">
           <n-button 
@@ -66,7 +71,7 @@
     const router = useRouter()
     const message = useMessage()
     const notification = useNotification()
-    const step = ref(2)
+    const step = ref(1)
     const validate = ref(true)
     const dataForTicket = ref({
       ci: '',
@@ -74,14 +79,10 @@
       phone: '', 
       email: '', 
       client_id: '',
-      departament: 0,
+      departament_id: 0,
+      type:2,
     })
 
-    const setDepartament = (departament) => {
-      dataForTicket.value.departament = departament;
-      dataForTicket.value.departament_id = departament.id;
-      validate.value = false
-    }
 
     const setClient = (client) => {
       dataForTicket.value.ci = client.ci;
@@ -89,14 +90,21 @@
       dataForTicket.value.phone = client.phone;
       dataForTicket.value.email = client.email;
       dataForTicket.value.client_id = client.id;
-      dataForTicket.value.departament = client.dep;
-      // dataForTicket.value.departament_id = departament.id;
-
+      dataForTicket.value.departament_id = client.dep;
       validate.value = !client.check
     }
+
+    const setDayTime = (data) => {
+      dataForTicket.value.day = data.day;
+      dataForTicket.value.time = data.time;
+      validate.value = !data.check
+    }
     const createTicket = () => {
+
+      console.log(dataForTicket.value)
       loading.value = true
-      ticketStore.createTicket(dataForTicket.value)
+
+      ticketStore.createTicketPublic(dataForTicket.value)
       .then((response) => {
         if(response.code !== 200) throw response
         ticket.value = response.data;
@@ -119,7 +127,7 @@
         return
       }
       if(step.value == 3) {
-        router.push('/host')
+        step.value = 1
         return
       }
       
@@ -132,9 +140,9 @@
       validate,
       dataForTicket,
       ticket,
-      setDepartament,
       setClient,
       actionButton,
+      setDayTime,
     }
   }
 })

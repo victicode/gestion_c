@@ -340,6 +340,12 @@ html{
   display: none;
 }
 @media screen and (max-width: 780px){
+  .button_action__bottom_bar-app{
+    width: 10rem;
+    &--back{
+      width: 10rem;
+    }
+  }
   .mt-xs-2{
     margin-top:2%;
   }
@@ -374,5 +380,8 @@ html{
       padding-left: 0px!important;
       height:100%
     }
+  }
+  .title__container, .title2__container{
+    margin-bottom: 0.5rem;
   }
 }

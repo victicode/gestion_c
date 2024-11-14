@@ -1,23 +1,25 @@
 <template>
-  <div class="form__container-date mt-2"> 
+  <div class="form__container-date mt-1"> 
     <n-card  class="host-page px-0 w-100 h-100" style="max-height:100%" >
       <div>
-        <div class="flex justify-between items-center w-100">
-          <div class=" text-h5 " style="margin-bottom:5px">Selecciona la fecha y la hora de tu consulta🩺 </div>
+        <div class="flex justify-between items-center w-100 title__container">
+          <div class=" text-h5 " style="margin-bottom:5px; width: 70%">Selecciona la fecha y la hora de tu consulta🩺 </div>
           <div class=" text-h5 " style="margin-bottom:5px">Paso 2/3</div>
         </div>
-        <div class=" text-h2 w-100 text-bold " style="margin-bottom:15px">Selecciona el día</div>
+        <div class=" text-h2 w-100 text-bold title2__container" style="margin-bottom:15px">Selecciona el día</div>
         <div class="">
           <DatePicker 
-          v-model="dateAppointment" 
-          :disabled-dates="disabledDates" 
-          :color="'green'"  
-          style="width: 100%;" 
-          :min-date="new Date()" 
-          :max-date="moment().add(setLefDay(), 'days').format()" 
-          is-required
-          @update:modelValue="getAvaibleHour"
-          class="appointment-calendar"/>
+            v-model="dateAppointment" 
+            :disabled-dates="disabledDates" 
+            :color="'green'"  
+            style="width: 100%;" 
+            :min-date="new Date()" 
+            :max-date="moment().add(setLefDay(), 'days').format()" 
+            is-required
+            @update:modelValue="getAvaibleHour"
+            class="appointment-calendar"
+            :attributes="attributes"
+          />
         </div>
         <div class="footer__container">
           <div class="footer__section">
@@ -33,10 +35,11 @@
                 menu-size="large"
                 :options="avaibleHour"
                 :disabled="avaibleHour.length == 1 "
+                @update:value="validateDayTime"
               />
           </div>
           <div class="footer__section" style=" display: flex; align-items: end; flex-direction: column"> 
-            <div class=" text-h5 text-bold " style="margin-top:1rem">Fecha Seleccionada</div>
+            <div class="text-h5 text-bold" style="margin-top:1.5rem">Fecha Seleccionada</div>
             <div style="font-size: 1.2rem;margin-top:0.5rem">
               {{  dateAppointment ? moment(dateAppointment).format('DD/MM/YYYY') : '--/--/----' }}  
               {{ hourAppointment == 0 ? '--:-- --' : avaibleHour.find((hour) => hour.id == hourAppointment).hour }}
@@ -62,12 +65,13 @@ export default defineComponent({
   props: {
     'departament': Number,
   },
-  emits: ['selectedUser'],
+  emits: ['selectedDayTime'],
   setup (props, { emit }) {
     const moment = inject('moment')
     const ticketStore = useTicketStore()
-    const departament =  1;
-    const dateAppointment = ref()
+    const departament =  props.departament;
+  
+    const dateAppointment = ref('')
     const hourAppointment = ref(0)
     const disabledDates = ref([])
     const avaibleHour = ref([
@@ -97,14 +101,60 @@ export default defineComponent({
     const setLefDay = ()  => {
       return 7 - parseInt(moment().format('d')) -2
     }
+    const dotDays = () => {
+      const leftDays = setLefDay()
+      const attributes = []
+      for (let index = 0; index < leftDays+1 ; index++) {
+        attributes.push(
+          {
+            key: 'today',
+            dot: true,
+            dates: new Date(moment().format('YYYY'), moment().format('MM')-1, parseInt(moment().format('DD')) + index)
+          
+          }
+        )
+        
+      }
+      console.log(attributes)
+      return attributes;
+    }
     const resetHour = () => {
-      hourAppointment.value =0
+      hourAppointment.value = 0
       avaibleHour.value = [
         {id:0, hour:'Cargando...'},
       ] 
+      validateDayTime()
+    }
+    const validateDayTime = () =>  {
+      let check = true
+      if(!dateAppointment.value) check = false
+      if(!hourAppointment.value) check = false
+
+      emit('selectedDayTime', { 
+        day:  dateAppointment.value, 
+        time: avaibleHour.value.find((hour) => hour.id == hourAppointment.value).hour, 
+        check
+      })
+      
+    }
+    const getNotAvaibleDay = () => {
+      const data = {
+        departament,
+      }
+
+      ticketStore.getNotAvaibleDay(data)
+      .then((response) =>{
+        console.log(response)
+      })
+      .catch((response) => {
+        console.log(response)
+
+      })
     }
 
-
+    onMounted(() => {
+      // getNotAvaibleDay()
+    })
     return {
       dateAppointment,
       disabledDates,
@@ -113,6 +163,8 @@ export default defineComponent({
       moment,
       getAvaibleHour,
       setLefDay,
+      validateDayTime,
+      attributes:dotDays()
     };
   }
 });
@@ -121,10 +173,10 @@ export default defineComponent({
   .footer__container{
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
   }
   .footer__section{
     width: 50%;
-    
   }
   .n-base-select-menu .n-base-select-option.n-base-select-option--show-checkmark{
     margin-top: 10px;
@@ -146,8 +198,8 @@ export default defineComponent({
     }
     & .vc-attr{
       font-size: 20px;
-      height: 40px;
-      width: 40px;
+      height: 45px;
+      width: 45px;
     }
     & .vc-title{
       font-size: 20px;
@@ -159,11 +211,20 @@ export default defineComponent({
       height: 35px;
       width: 35px;
     }
+    & .vc-dot{
+      width: 5px!important;
+      height: 5px!important;
+      transform: translateY(0.2rem);
+    }
   }
   
   @media screen and (max-width: 780px){ 
+    .footer__container{
+      margin-top: 1rem;
+    }
     .footer__section{
       width: 100%;
+      align-items:start!important
     }
     .form__container-date{
       padding: 0px 2%;

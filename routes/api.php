@@ -16,6 +16,10 @@ Route::prefix('auth')->name('user.')->group(function () {
 
 Route::prefix('public')->group(function () {
   Route::post('/avaibleHour/get', [TicketController::class, 'getHourAvaibleByDay']);
+  Route::post('/notAvaibleDay/get', [TicketController::class, 'getNotAvaibleDay']);
+  Route::post('/createTicket', [TicketController::class, 'createTicket']);
+
+  Route::get('/client/byCi', [ClientController::class, 'getByCi']);
 
 });
 
