@@ -14,7 +14,7 @@ use App\Models\Hour;
 class TicketController extends Controller
 {
     public function createTicket(Request $request) {
-        if($this->checkLimitTicket($request->departament_id)) return $this->returnFail(201, 'Has alcanzado el limites de cita por día en el departamento');
+        if($this->checkLimitTicket($request->departament_id, $request->day)) return $this->returnFail(201, 'Has alcanzado el limites de cita por día en el departamento');
         date_default_timezone_set('America/Caracas');
         $ticket = Ticket::create([
             'number'            => $this->setNumberTicket($request->departament_id, $request->day ?? null ),
@@ -23,7 +23,7 @@ class TicketController extends Controller
             'type'              => $request->type ?? 1,
             'status'            => 1,
             'hour'              => $request->time ?? null,
-            'created_at'        => $request->day ?? date("Y-m-d H:i:s"),
+            'created_at'        => $request->day ? date("Y-m-d H:i:s", strtotime(date("Y-m-d",strtotime($request->day)). $request->time)) : date("Y-m-d H:i:s"),
         ]);
         event(new TicketEvent($request->departament_id));
         return $this->returnSuccess(200,  $ticket->load('client')->load('departament'));
@@ -135,9 +135,9 @@ class TicketController extends Controller
         return DepartamentController::getCorrelative($departamentId, date("Y-m-d", strtotime( $date ?? 'now')));
     }
 
-    private function checkLimitTicket($id){
+    private function checkLimitTicket($id, $day = null){
         $departament = Departament::find($id);
-        $tickes = Ticket::where('departament_id', $id)->whereDate('created_at', '=' , date('Y-m-d'))
+        $tickes = Ticket::where('departament_id', $id)->whereDate('created_at', '=' , $day ? date('Y-m-d', strtotime($day)) : date('Y-m-d' ))
         ->whereTime('created_at', '<', '23:59:59')->count();
 
         return $departament->limit == 0 

@@ -225,7 +225,16 @@ export default defineComponent({
     onMounted(() => {
       getDepartaments()
     })
-
+    watch(() => props.dataClient, (newValue) => {
+      client.value = {
+      id:  newValue.id ?? null,
+      name:  newValue.name ?? '',
+      ci: newValue.ci ?? '',
+      phone:  newValue.phone ?? '',
+      email:  newValue.email ?? '',
+      dep: newValue.departament_id ?? 0
+    }
+    });
     return {
       formTicket,
       client,

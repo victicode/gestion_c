@@ -2,18 +2,18 @@
   <div class="h-100">
     <div class="host-container">
       <transition name="horizontal">
-        <div  class=" px-0 w-100 h-100" style="max-height:100%;" v-show="step==1">
+        <div  class=" px-0 w-100 h-100" style="max-height:100%;  margin-top: 1rem;" v-show="step==1">
           <clientForm  :dataClient="dataForTicket" @selectedUser="setClient" />
         </div>
       </transition>
       <transition name="horizontal">
-        <div  class=" px-0 w-100 h-100" style="max-height:100%;" v-if="step==2">
+        <div  class=" px-0 w-100 h-100" style="max-height:100%;  margin-top: 1rem;" v-if="step==2">
           <dayPicker :departament="dataForTicket.departament_id"  @selectedDayTime="setDayTime" />
         </div>
       </transition>
       <transition name="horizontal">
-        <div  class=" px-0 w-100 h-100" style="max-height:100%;" v-if="step==3">
-          Bien!!!
+        <div  class=" px-0 w-100 h-100" style="max-height:100%; margin-top: 1rem;" v-if="step==3">
+          <viewTicket :ticket="ticket" />
         </div>
       </transition>
     </div>
@@ -57,12 +57,13 @@
   import { useRouter } from 'vue-router'
   import { ref } from 'vue'
   import { useMessage, useNotification } from 'naive-ui';
-
+  import viewTicket from '@/components/host/ticket/viewTicket.vue';
 
   export default defineComponent({
   components: {
     clientForm,
     dayPicker,
+    viewTicket,
   },
 	setup () {
     const loading = ref(false)
@@ -100,8 +101,6 @@
       validate.value = !data.check
     }
     const createTicket = () => {
-
-      console.log(dataForTicket.value)
       loading.value = true
 
       ticketStore.createTicketPublic(dataForTicket.value)
@@ -116,6 +115,17 @@
         message.error(response.error)
       })
     }
+    const cleanData = () => {
+      dataForTicket.value = {
+        ci: '',
+        name: '',
+        phone: '', 
+        email: '', 
+        client_id: '',
+        departament_id: 0,
+        type:2,
+      }
+    }
     const actionButton = () => {
       if(step.value == 1) {
         step.value++ 
@@ -128,6 +138,7 @@
       }
       if(step.value == 3) {
         step.value = 1
+        cleanData()
         return
       }
       
