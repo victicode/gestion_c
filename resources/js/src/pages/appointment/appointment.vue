@@ -2,17 +2,17 @@
   <div class="h-100">
     <div class="host-container">
       <transition name="horizontal">
-        <div  class=" px-0 w-100 h-100" style="max-height:100%;  margin-top: 1rem;" v-show="step==1">
+        <div  class=" px-0 w-100 h-100 container__section" style="max-height:100%; " v-show="step==1">
           <clientForm  :dataClient="dataForTicket" @selectedUser="setClient" />
         </div>
       </transition>
       <transition name="horizontal">
-        <div  class=" px-0 w-100 h-100" style="max-height:100%;  margin-top: 1rem;" v-if="step==2">
+        <div  class=" px-0 w-100 h-100 container__section" style="max-height:100%;" v-if="step==2">
           <dayPicker :departament="dataForTicket.departament_id"  @selectedDayTime="setDayTime" />
         </div>
       </transition>
-      <transition name="horizontal">
-        <div  class=" px-0 w-100 h-100" style="max-height:100%; margin-top: 1rem;" v-if="step==3">
+      <transition name="horizontal ">
+        <div  class=" px-0 w-100 h-100 container__section " style="max-height:100%;" v-if="step==3">
           <viewTicket :ticket="ticket" />
         </div>
       </transition>
@@ -159,5 +159,9 @@
 })
 </script>
 <style lang="scss" >
-
+@media screen and (max-width: 780px){ 
+  .container__section{
+    margin-top: 1rem;
+  }
+}
 </style>

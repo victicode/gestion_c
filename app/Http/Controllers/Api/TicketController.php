@@ -95,16 +95,24 @@ class TicketController extends Controller
 
     }
     public function getNotAvaibleDay(Request $request){
-       $tickets = Ticket::where('departament_id', $request->departament)
-        ->whereMonth('created_at', date("m"))
-        ->whereDay('created_at','>=', date("d"))
-        ->groupBy('created_at')
-        ->get(); 
+    //    $tickets = Ticket::where('departament_id', $request->departament)
+    //     ->whereMonth('created_at', date("m"))
+    //     ->whereDay('created_at','>=', date("d"))
+    //     ->groupBy('created_at')
+    //     ->get(); 
+        $limitDays = [];
+        $g = json_decode($request->days);
+
+        for ($i=0; $i < count($g); $i++) { 
+            # code...
+            if($this->checkLimitTicket($request->departament, $g[$i])){
+                array_push($limitDays, date('Y-m-d ', strtotime($g[$i])));
+            }
+        }
         
-        return $this->returnSuccess(200, $tickets);
+        return $this->returnSuccess(200,  $limitDays);
 
     }
-    
     private function filterAvaibleHourByDay($tickets, $hours){
         $listAppointment = json_decode(json_encode($tickets), true);
         $listHour = json_decode(json_encode($hours), true);

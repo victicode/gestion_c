@@ -1,12 +1,14 @@
 <template>
-  <div class="form__container-date mt-1"> 
+  <div class="form__container-date "> 
     <n-card  class="host-page px-0 w-100 h-100" style="max-height:100%" >
       <div>
         <div class="flex justify-between items-center w-100 title__container">
           <div class=" text-h5 " style="margin-bottom:5px; width: 70%">Selecciona la fecha y la hora de tu consulta🩺 </div>
           <div class=" text-h5 " style="margin-bottom:5px">Paso 2/3</div>
         </div>
-        <div class=" text-h2 w-100 text-bold title2__container" style="margin-bottom:15px">Selecciona el día</div>
+        <div class=" text-h2 w-100 text-bold title2__container" >Selecciona el día</div>
+        <div class=" text-h5" style="margin-bottom:15px;">Los cupos de cita por dias son limitados por semana*</div>
+
         <div class="">
           <DatePicker 
             v-model="dateAppointment" 
@@ -69,8 +71,7 @@ export default defineComponent({
   setup (props, { emit }) {
     const moment = inject('moment')
     const ticketStore = useTicketStore()
-    const departament =  props.departament;
-  
+    const departament =  props.departament;  
     const dateAppointment = ref('')
     const hourAppointment = ref(0)
     const disabledDates = ref([])
@@ -115,7 +116,6 @@ export default defineComponent({
         )
         
       }
-      console.log(attributes)
       return attributes;
     }
     const resetHour = () => {
@@ -138,13 +138,16 @@ export default defineComponent({
       
     }
     const getNotAvaibleDay = () => {
+      
+      
       const data = {
-        departament,
+        days: formatDatepost(),
+        departament: departament
       }
 
       ticketStore.getNotAvaibleDay(data)
       .then((response) =>{
-        console.log(response)
+        disabledDates.value = formatDate(response.data)
       })
       .catch((response) => {
         console.log(response)
@@ -152,8 +155,25 @@ export default defineComponent({
       })
     }
 
+    const formatDatepost = () => {
+      let days = []
+      for (let index = 0; index < setLefDay()+1; index++) {
+        days.push(moment().add(index, 'days').format())
+      }
+      return JSON.stringify(days)
+    }
+
+    const formatDate = (dates) => {
+      let datesFormatted = []
+      dates.forEach(date => {
+        datesFormatted.push(new Date(date))
+      });
+
+      return datesFormatted
+    }
+
     onMounted(() => {
-      // getNotAvaibleDay()
+      getNotAvaibleDay()
     })
     return {
       dateAppointment,
@@ -198,8 +218,8 @@ export default defineComponent({
     }
     & .vc-attr{
       font-size: 20px;
-      height: 45px;
-      width: 45px;
+      height: 42px;
+      width: 42px;
     }
     & .vc-title{
       font-size: 20px;
@@ -208,8 +228,8 @@ export default defineComponent({
 
     }
     & .vc-highlight{
-      height: 35px;
-      width: 35px;
+      height: 32px;
+      width: 32px;
     }
     & .vc-dot{
       width: 5px!important;
