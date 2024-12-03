@@ -2,68 +2,55 @@
   <div v-if="departaments.length > 0" class="h-100 displayContent">
     <transition name="fadex">
       <div v-if="show == 1" class="departamentGroup">
-        <div v-for="departament in departaments1" :key="departament.id" style="width:80%!important;"  >
+        <div v-for="departament in departaments1" :key="departament.id" style="width:77%!important;"  >
           <div class="displayDepartament__content">
             <div>
-              <div class="mb-0 text-center" style="font-size: 22px;" >
+              <div class="mb-0 text-center" style="font-size: 1.5rem;" >
               {{ departament.name }}
               </div>
             </div>
             <div>
-              <n-h1 class="text-bold mb-0"> 
+              <n-h1 class="text-bold mb-0" style="    font-size: 3.8rem; line-height: 1.05;" > 
                 {{ departament.current_ticket ? departament.current_ticket.number : '---' }}
               </n-h1>
             </div>
-            <div>
-              <div class="mb-0 text-center" style="font-size: 22px;" >
-                {{ departament.current_ticket ? departament.current_ticket.client.name  : '...' }}
-              </div>
-            </div>
+            
           </div>
         </div>
       </div>
     </transition>        
     <transition name="fadex">
       <div v-if="show == 2" class="departamentGroup">
-        <div v-for="departament in departaments2" :key="departament.id" style="width:80%!important; "   >
+        <div v-for="departament in departaments2" :key="departament.id" style="width:77%!important; "   >
           <div class="displayDepartament__content">
             <div>
-              <div class="mb-0 text-center" style="font-size: 22px;" >
+              <div class="mb-0 text-center" style="font-size: 1.5rem;" >
               {{ departament.name }}
               </div>
             </div>
             <div>
-              <n-h1 class="text-bold mb-0"> 
+              <n-h1 class="text-bold mb-0" style="    font-size: 3.8rem; line-height: 1.05;" > 
                 {{ departament.current_ticket ? departament.current_ticket.number : '---' }}
               </n-h1>
             </div>
-            <div>
-              <div class="mb-0 text-center" style="font-size: 22px;" >
-                {{ departament.current_ticket ? departament.current_ticket.client.name  : '...' }}
-              </div>
-            </div>
+            
           </div>
         </div>
       </div>
     </transition>        
     <transition name="fadex">
       <div v-if="show == 3" class="departamentGroup last">
-        <div v-for="departament in departaments3" :key="departament.id" style="width:80%!important; "  class="mt-3" >
+        <div v-for="departament in departaments3" :key="departament.id" style="width:77%!important; "  class="mt-3" >
           <div class="displayDepartament__content">
             <div>
-              <div class="mb-0 text-center" style="font-size: 22px;" >
+              <div class="mb-0 text-center" style="font-size: 1.5rem;" >
               {{ departament.name }}
               </div>
             </div>
             <div>
-              <n-h1 class="text-bold mb-0"> 
+              <n-h1 class="text-bold mb-0" style="    font-size: 3.8rem; line-height: 1.05;" > 
                 {{ departament.current_ticket ? departament.current_ticket.number : '---' }}
               </n-h1>
-            </div>
-            <div>
-              <div class="mb-0 text-center" style="font-size: 22px;" >
-                {{ departament.current_ticket ? departament.current_ticket.client.name  : '...' }}
-              </div>
             </div>
           </div>
         </div>
@@ -74,7 +61,8 @@
 <script>
   import { useDepartamentStore } from '@/services/store/departament.store';
   import { ref, onMounted } from 'vue'
-
+  import eventBus from '@/services/eventBus/eventBus'
+  import audio from '@/assets/audio/alert2.mp3'
   export default defineComponent({
     setup () {
       const departamentStore = useDepartamentStore()
@@ -83,12 +71,20 @@
       const departaments1 = ref([])
       const departaments2 = ref([])
       const departaments3 = ref([])
-
-      const getDepartamentList = () => {
+      const interval = ref('')
+      const alert = new Audio(audio)
+      const getDepartamentList = (inject = false) => {
         departamentStore.getDepartamentsWithPendingPublic()
         .then((response) => {
           departaments.value = response.data
           separateDepartaments(departaments.value)
+          if(inject){
+            departaments.value = response.data
+            eventBus.$emit('showNewTicket', 
+            formatDataEmit(departaments.value.find(departament => departament.id == inject)) )
+            alert.play()
+            goInterval()
+          }
         })
       }
       const separateDepartaments = (departaments) => {
@@ -96,28 +92,41 @@
         departaments2.value = departaments.slice(6,12)
         departaments3.value = departaments.slice(12,18)
       }
-      const colors = [
-        'white',
-        'green',
-        'black',
-        'yellow',
-        'red',
-        'blue',
-        'orange',
-        'grey',
-        'pink',
-      ]
+      const findTicket = (id) => {
 
-      onMounted(() => {
-        getDepartamentList()
-        setInterval(() => {
+        if(departaments1.value.find(departament => departament.id == id)) show.value = 1
+        if(departaments2.value.find(departament => departament.id == id)) show.value = 2
+        if(departaments3.value.find(departament => departament.id == id)) show.value = 3
+      }
+      const formatDataEmit = (data) => {
+        return {
+          departament: data.name,
+          ...data.current_ticket
+        }
+      }
+
+      const goInterval = () => {
+        interval.value = setInterval(() => {
           if(show.value == 3){
-            show.value = 1 
+            show.value -= 2 
             return
           }
           show.value++
           return
-        },6000)
+        },8000)
+      }
+      
+      onMounted(() => {
+        getDepartamentList(false)
+        window.Echo
+        .channel('displayUpdate')
+        .listen('DisplayEvent', async ({departament}) => {
+          clearInterval(interval.value)
+          getDepartamentList(departament)
+          findTicket(departament)
+        })
+        goInterval()
+        
 
       })
       return {
@@ -143,11 +152,9 @@
 .mb-0{
   margin-bottom: 0px;
 }
-.display__container{
-  padding: 0px 1rem;
-}
+
 .displayDepartament__content{
-    padding: 0.5rem 8px;
+    padding: 0.5rem 8px 1.3rem 8px;
     display:flex;
     justify-content: center;
     flex-direction: column;

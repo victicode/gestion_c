@@ -22,7 +22,9 @@
             </div>
             <div class="ticket__info--item">
               <n-icon size="30px" :component="CalendarLtr24Regular" /> 
-              <div class="ticket__info--item-text">{{moment(ticket.created_at).format('DD/MM/YYYY')}}</div>
+              <div class="ticket__info--item-text">
+                {{moment(ticket.created_at).format('DD/MM/YYYY')}} {{ ticket.hour ?? '' }}
+              </div>
             </div>
             <div class="ticket__info--item">
               <n-icon size="30px" :component="PersonCall24Regular" /> 
@@ -113,9 +115,8 @@ export default defineComponent({
     &--item-text{
       width:60%;
       margin-left: 2px;
-      
+      font-size: 0.9rem;
     }
-
   }
   .view-ticket{
     margin-top: 1%
@@ -133,6 +134,9 @@ export default defineComponent({
     line-height: 1.4;
   }
   @media screen and (max-width: 780px){ 
+    .ticket__info--item-text{
+      width:70%;
+    }
     .text-subtitle{
       font-size:0.9rem;
     }

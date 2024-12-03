@@ -32,11 +32,10 @@ import {
 	useMessage,
 	useDialog,
 	useNotification,
-	useLoadingBar,
 
 } from 'naive-ui'
 import { useRouter, useRoute } from 'vue-router'
-import {useAuthStore} from '@/services/store/auth.store'
+import { useAuthStore} from '@/services/store/auth.store'
 import utils from '@/util/httpUtil.js'
 
 export default defineComponent({
@@ -53,10 +52,16 @@ export default defineComponent({
 		window.$message = useMessage()
 		window.$dialog = useDialog()
 		window.$notification = useNotification()
-		window.$loadingBar = useLoadingBar()
 
     const isReady = (inject = null) => {
-      readyState.value =  inject ? false : route.name == 'hostDashboard' || route.name == 'hostDashboard_admin' ? false : true
+      readyState.value =  route.name == 'Login' 
+      ? true 
+      : inject 
+      ? false 
+      : route.name == 'hostDashboard' || route.name == 'hostDashboard_admin' || route.name == 'counterDashboard' 
+      ? false 
+      : true
+
       readyState2.value =  route.name == 'Login' ? true : false
     }
     const getCurrentUser = () =>{
@@ -74,11 +79,18 @@ export default defineComponent({
     }
     const exceptionsToShow = () => {
       const user = useAuthStore().user;
-      if(route.name == 'Login' || route.name == 'mmm') {
+      const includesList = [
+        'appointmentLogin',
+        'Login',
+        'waitRoom',
+        'appointmentCreate',
+      ] 
+      console.log()
+      if(includesList.includes(route.name)) {
         readyState2.value = true
         return true
       }
-      if(route.name !== 'hostDashboard' && route.name != 'hostDashboard_admin' && Object.values(user).length > 0) {
+      if(route.name !== 'hostDashboard' && route.name != 'hostDashboard_admin'  && route.name != 'counterDashboard' && Object.values(user).length > 0) {
         readyState2.value = true
         return true
       }
@@ -131,7 +143,7 @@ export default defineComponent({
 .app-layout {
   background: $primary !important;
   &::before{
-    background-image: url('https://siamtel.lara.gob.ve/fundacion-siamtel/sistema-siamtel/assets/imagenes/logo/logo.svg');
+    background-image: url('https://gestionc.victicodedev.com/public/images/logo/logo.svg');
     content: '';
     position: absolute;
     z-index: 0;

@@ -60,6 +60,7 @@ export default defineComponent({
     onMounted(() => {
       getDepartamentList()
     })
+    
     return {
       departaments,
       PeopleAudience20Regular,

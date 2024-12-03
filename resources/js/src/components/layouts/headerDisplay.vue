@@ -9,7 +9,7 @@
             </n-h2>
           </div>    
           <div class="items_header" style="text-align: end" >
-            <img src="https://siamtel.lara.gob.ve/fundacion-siamtel/wp-content/uploads/2021/02/cintillo.png"   width="200"/>
+            <img src="https://gestionc.victicodedev.com/public/images/logo/cintillo.png"   width="200"/>
           </div>
         </div>
       </n-card>

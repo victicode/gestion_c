@@ -40,6 +40,11 @@
       onMounted(() => {
         getDepartamentList()
       })
+      window.Echo
+      .channel('updateDepataments')
+      .listen('TicketEvent', async () => {
+        getDepartamentList()
+      })
       return {
         departaments,
         PeopleAudience20Regular,

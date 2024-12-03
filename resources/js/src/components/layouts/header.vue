@@ -7,7 +7,7 @@
           {{ moment(date).format('MMMM Do YYYY, h:mm:ss a') }}
         </div>    
         <div class="items_header text-center" >
-          <img src="https://siamtel.lara.gob.ve/fundacion-siamtel/wp-content/uploads/2021/02/cintillo.png"   width="200"/>
+          <img src="https://gestionc.victicodedev.com/public/images/logo/cintillo.png"   width="200"/>
         </div>
         <div class="items_header action_section " >
           <div class="hidden-xs">
@@ -31,7 +31,6 @@
             </n-button>
           </div>
         </div>
-
       </div>
     <!-- </n-card> -->
     </div>

@@ -4,6 +4,8 @@ import auth from './middlewares/auth'
 import admin from './middlewares/admin'
 import guest from './middlewares/guest'
 import hostLayout from '@/layouts/hostLayout.vue'
+import counterLayout from '@/layouts/counterLayout.vue'
+
 import hostPage from '@/pages/host.vue'
 
 const setInitByRol = () => {
@@ -22,6 +24,25 @@ const routes = [
     name:'Login',
     meta: {
       title : 'Iniciar sesion'
+    },
+    beforeEnter: guest,
+  },
+  { 
+    path: '/appointment/login', 
+    component: () => import('@/pages/appointment/login.vue'),
+    name:'appointmentLogin',
+    meta: {
+      title : 'Iniciar sesion'
+    },
+    beforeEnter: guest,
+  },
+  
+  { 
+    path: '/appointment/new', 
+    component: () => import('@/pages/appointment/appointment.vue'),
+    name:'appointmentCreate',
+    meta: {
+      title : 'Crea una nueva cita'
     },
     beforeEnter: guest,
   },
@@ -58,7 +79,24 @@ const routes = [
     beforeEnter: auth,
   },
   {
-    name:'mmm',
+    path: '/', 
+    component: counterLayout ,
+    children:[
+      {
+
+        name:'counterDashboard',
+        path: '/counter', 
+        meta: {
+          title : 'Bienvenido'
+        },
+        component: () => import('@/pages/counter.vue'), 
+      }
+    ],
+    beforeEnter: auth,
+
+  },
+  {
+    name:'waitRoom',
     path: '/view/all', 
     meta: {
       title : 'Sala de espera'

@@ -33,11 +33,40 @@ export const useDepartamentStore = defineStore("departament", {
           });
       })
     },
+    async getDepartamentsPublicApp() {
+      return await new Promise((resolve, reject) => {
+        ApiService.get("/api/departament/appointment")
+        .then(({ data }) => {
+          if(data.code !== 200) throw data;
+          resolve(data)
+        })
+        .catch((response) => {
+          console.log(response)
+          reject('Error al obtener departamento');
+        });
+      })
+    },
     async getDepartamentQueueById(id) {
       return await new Promise((resolve, reject) => {
         if (JwtService.getToken()) {
           ApiService.setHeader();
           ApiService.get("/api/departament/queue/"+id)
+          .then(({ data }) => {
+            if(data.code !== 200) throw data;
+            resolve(data)
+          })
+          .catch((response) => {
+            console.log(response)
+            reject('Error al obtener el departamento');
+          });
+        }
+      })
+    },
+    async updateLimit(data) {
+      return await new Promise((resolve, reject) => {
+        if (JwtService.getToken()) {
+          ApiService.setHeader();
+          ApiService.post("/api/departament/updateLimit/"+data.id, data)
           .then(({ data }) => {
             if(data.code !== 200) throw data;
             resolve(data)

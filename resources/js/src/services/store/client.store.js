@@ -21,5 +21,19 @@ export const useClientStore = defineStore("client", {
         }
       })
     },
+    async getClientByCiPublic(CI) {
+      return await new Promise((resolve, reject) => {
+        ApiService.get("/api/public/client/byCi?ci="+CI+'&')
+        .then(({ data }) => {
+          if(data.code !== 200) throw data;
+          resolve(data)
+        })
+        .catch((response) => {
+          console.log(response)
+          reject('Error al cliente');
+        });
+
+      })
+    },
   },
 });

@@ -15,8 +15,70 @@ export const useTicketStore = defineStore("ticket", {
             resolve(data)
           })
           .catch((response) => {
-            console.log(response)
-            reject('Error al cliente');
+            reject(response);
+          });
+        }
+      })
+    },
+    async createTicketPublic(data) {
+      return await new Promise((resolve, reject) => {
+        ApiService.post("/api/public/createTicket", data)
+        .then(({ data }) => {
+          if(data.code !== 200) throw data;
+          resolve(data)
+        })
+        .catch((response) => {
+          reject(response);
+        });
+      })
+    },
+    async nextTicket(data) {
+      return await new Promise((resolve, reject) => {
+        if (JwtService.getToken()) {
+          ApiService.setHeader();
+          ApiService.get("/api/ticket/next/"+data)
+          .then(({ data }) => {
+            if(data.code !== 200) throw data;
+            resolve(data)
+          })
+          .catch((response) => {
+            reject(response);
+          });
+        }
+      })
+    },
+    async recallTicket(data) {
+      return await new Promise((resolve, reject) => {
+        if (JwtService.getToken()) {
+          ApiService.setHeader();
+          ApiService.get("/api/ticket/recall/"+data)
+          .then(({ data }) => {
+            if(data.code !== 200) throw data;
+            resolve(data)
+          })
+          .catch((response) => {
+            if(response.code === 201) {
+              reject('No hay tickets');
+            }
+            reject(response);
+          });
+        }
+      })
+    },
+    async posNextTicket(data) {
+      return await new Promise((resolve, reject) => {
+        if (JwtService.getToken()) {
+          ApiService.setHeader();
+          ApiService.get("/api/ticket/posNext/"+data)
+          .then(({ data }) => {
+            if(data.code !== 200) throw data;
+            resolve(data)
+          })
+          .catch((response) => {
+            if(response.code === 201) {
+              reject('No hay tickets');
+            }
+            reject(response);
           });
         }
       })
@@ -37,5 +99,31 @@ export const useTicketStore = defineStore("ticket", {
         }
       })
     },
+    async getAvaibleHoursByDay(data){
+      return await new Promise((resolve, reject) => {
+        ApiService.post("/api/public/avaibleHour/get", data)
+        .then(({ data }) => {
+          if(data.code !== 200) throw data;
+          resolve(data)
+        })
+        .catch((response) => {
+          console.log(response)
+          reject('Error al obtener departamento');
+        });
+      })
+    },
+    async getNotAvaibleDay(data){
+      return await new Promise((resolve, reject) => {
+        ApiService.post("/api/public/notAvaibleDay/get", data)
+        .then(({ data }) => {
+          if(data.code !== 200) throw data;
+          resolve(data)
+        })
+        .catch((response) => {
+          console.log(response)
+          reject('Error al obtener departamento');
+        });
+      })
+    }
   },
 });

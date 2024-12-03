@@ -17,16 +17,16 @@
   import { useAuthStore } from "@/services/store/auth.store";
   import headerHost from '@/components/layouts/header.vue'
   export default defineComponent({
-  components:{
-    headerHost
-  },
-	setup () {
-    const { user } = storeToRefs(useAuthStore())
-    return {
-      user
+    components:{
+      headerHost
+    },
+    setup () {
+      const { user } = storeToRefs(useAuthStore())
+      return {
+        user
+      }
     }
-  }
-})
+  })
 </script>
 <style lang="scss" scoped>
   .header{
