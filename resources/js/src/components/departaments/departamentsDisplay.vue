@@ -2,7 +2,7 @@
   <div v-if="departaments.length > 0" class="h-100 displayContent">
     <transition name="fadex">
       <div v-if="show == 1" class="departamentGroup">
-        <div v-for="departament in departaments1" :key="departament.id" style="width:77%!important;"  >
+        <div v-for="departament in departaments1" :key="departament.id" style="width:95%!important;"  >
           <div class="displayDepartament__content">
             <div>
               <div class="mb-0 text-center" style="font-size: 1.5rem;" >
@@ -21,7 +21,7 @@
     </transition>        
     <transition name="fadex">
       <div v-if="show == 2" class="departamentGroup">
-        <div v-for="departament in departaments2" :key="departament.id" style="width:77%!important; "   >
+        <div v-for="departament in departaments2" :key="departament.id" style="width:95%!important; "   >
           <div class="displayDepartament__content">
             <div>
               <div class="mb-0 text-center" style="font-size: 1.5rem;" >
@@ -37,10 +37,28 @@
           </div>
         </div>
       </div>
-    </transition>        
+    </transition>    
     <transition name="fadex">
-      <div v-if="show == 3" class="departamentGroup last">
-        <div v-for="departament in departaments3" :key="departament.id" style="width:77%!important; "  class="mt-3" >
+      <div v-if="show == 3" class="departamentGroup">
+        <div v-for="departament in departaments3" :key="departament.id" style="width:95%!important; "  class="" >
+          <div class="displayDepartament__content">
+            <div>
+              <div class="mb-0 text-center" style="font-size: 1.5rem;" >
+              {{ departament.name }}
+              </div>
+            </div>
+            <div>
+              <n-h1 class="text-bold mb-0" style="    font-size: 3.8rem; line-height: 1.05;" > 
+                {{ departament.current_ticket ? departament.current_ticket.number : '---' }}
+              </n-h1>
+            </div>
+          </div>
+        </div>
+      </div>
+    </transition>      
+    <transition name="fadex">
+      <div v-if="show == 4" class="departamentGroup last">
+        <div v-for="departament in departaments4" :key="departament.id" style="width:95%!important; "  class="" >
           <div class="displayDepartament__content">
             <div>
               <div class="mb-0 text-center" style="font-size: 1.5rem;" >
@@ -71,6 +89,8 @@
       const departaments1 = ref([])
       const departaments2 = ref([])
       const departaments3 = ref([])
+      const departaments4 = ref([])
+
       const interval = ref('')
       const alert = new Audio(audio)
       const getDepartamentList = (inject = false) => {
@@ -88,15 +108,18 @@
         })
       }
       const separateDepartaments = (departaments) => {
-        departaments1.value = departaments.slice(0,6)
-        departaments2.value = departaments.slice(6,12)
-        departaments3.value = departaments.slice(12,18)
+        departaments1.value = departaments.slice(0,5)
+        departaments2.value = departaments.slice(5,10)
+        departaments3.value = departaments.slice(10,15)
+        departaments4.value = departaments.slice(15,16)
       }
       const findTicket = (id) => {
 
         if(departaments1.value.find(departament => departament.id == id)) show.value = 1
         if(departaments2.value.find(departament => departament.id == id)) show.value = 2
         if(departaments3.value.find(departament => departament.id == id)) show.value = 3
+        if(departaments4.value.find(departament => departament.id == id)) show.value = 4
+
       }
       const formatDataEmit = (data) => {
         return {
@@ -107,8 +130,8 @@
 
       const goInterval = () => {
         interval.value = setInterval(() => {
-          if(show.value == 3){
-            show.value -= 2 
+          if(show.value == 4){
+            show.value -= 3 
             return
           }
           show.value++
@@ -134,6 +157,7 @@
         departaments1,
         departaments2,
         departaments3,
+        departaments4,
         show,
       }
     }
@@ -141,7 +165,7 @@
 </script>
 <style lang="scss">
 .displayContent{
-  width: 100%; padding: 1.1rem 0px; overflow: hidden
+  width: 100%; padding: 0.8rem 0px; padding-bottom: 1.5rem; overflow: hidden
 }
 .departamentGroup{
   display: flex; justify-content: space-between; flex-direction: column; height: 100%;

@@ -285,6 +285,7 @@ export default defineComponent({
     }
   }
   @media screen and (max-width: 780px){ 
+
     .form__container{
       padding: 0px 2%;
       & .n-card.n-card--bordered {

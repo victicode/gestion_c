@@ -7,7 +7,7 @@
           <div class=" text-h5 " style="margin-bottom:5px">Paso 2/3</div>
         </div>
         <div class=" text-h2 w-100 text-bold title2__container" >Selecciona el día</div>
-        <div class=" text-h5" style="margin-bottom:15px;">Los cupos de cita por dias son limitados por semana*</div>
+        <div class=" text-info" style="">Los cupos de cita por dias son limitados por semana*</div>
 
         <div class="">
           <DatePicker 
@@ -237,8 +237,13 @@ export default defineComponent({
       transform: translateY(0.2rem);
     }
   }
-  
+  .text-info{
+    margin-bottom:15px;font-size:15px;color:rgb(156, 156, 156)
+  }
   @media screen and (max-width: 780px){ 
+    .text-info{
+      margin-bottom:5px;font-size:11px; color:rgb(156, 156, 156)
+    }
     .footer__container{
       margin-top: 1rem;
     }
