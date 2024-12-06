@@ -104,6 +104,15 @@ const routes = [
     component: () => import('@/pages/display.vue'), 
     beforeEnter: guest,
   },
+  {
+    name:'waitRoom2',
+    path: '/view/all2', 
+    meta: {
+      title : 'Sala de espera'
+    },
+    component: () => import('@/pages/display2.vue'), 
+    beforeEnter: guest,
+  },
 ]
 
 const router = createRouter({

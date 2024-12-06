@@ -1,5 +1,5 @@
 <template>
-  <div class="header-host w-100 h-100" style="overflow: hidden; " >
+  <div class="header-host w-100 h-100" style="overflow: hidden; padding-left: 0px; padding-right: 0px; " >
     <div  class="  header__section w-100" >
       <n-card  class="host-page  w-100"  style=" padding: 0.2rem 2rem;">
         <div class="host-header__container">

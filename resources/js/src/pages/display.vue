@@ -1,14 +1,14 @@
 <template>
   <div class="display__container h-100">
     <div class="h-100" style="display: flex">
-      <div style="width: 30%;">
+      <div style="width: 28%;">
         <departamentsDisplay />
       </div>
-      <div style="width: 70%;">
+      <div style="width: 72%;">
         <div style="height: 15%; overflow: hidden;">
           <headerDisplay />
         </div>
-        <div style="height: 80%; overflow: hidden; padding: 0px 2.5rem ">
+        <div style="height: 80%; overflow: hidden; ">
           <div class="publicidad" :style="'background:'+colors[color]">
           </div>
         </div>
@@ -18,8 +18,12 @@
       <div v-if="newShow" class="newTicketUpdate">
         <div class="ticket__container">
           <div v-for="ticket in tickets" :key="ticket.id" class="ticket__content">
-            <div style="font-size: 2.5rem;">{{ ticket.departament }}</div>
-            <div style="font-size: 8rem;">{{ ticket.number }}</div>
+            <div class="departament__name" style="padding: 1.2rem;">
+              <div style="font-size: 2.5rem;">{{ ticket.departament }}</div>
+            </div>
+            <div style="padding: 1.2rem;">
+              <div style="font-size: 8rem;">{{ ticket.number }}</div>
+            </div>
           </div>
         </div>
       </div>
@@ -107,7 +111,7 @@
 }
 .ticket__content {
   background: white;
-  padding: 3rem; 
+  
   text-align: center; 
   border-radius: 20px;
   margin: 0px 1rem;

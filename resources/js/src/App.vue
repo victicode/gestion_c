@@ -83,6 +83,7 @@ export default defineComponent({
         'appointmentLogin',
         'Login',
         'waitRoom',
+        'waitRoom2',
         'appointmentCreate',
       ] 
       console.log()
