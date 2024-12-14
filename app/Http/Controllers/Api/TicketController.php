@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\Hour;
 use App\Models\Client;
 use App\Models\Ticket;
 use App\Events\TicketEvent;
+use App\Models\Departament;
 use App\Events\DisplayEvent;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\Departament;
-use App\Models\Hour;
+use Exception;
+use Illuminate\Support\Facades\Mail;
+
 
 class TicketController extends Controller
 {
@@ -26,7 +29,8 @@ class TicketController extends Controller
             'created_at'        => $request->day ? date("Y-m-d H:i:s", strtotime(date("Y-m-d",strtotime($request->day)). $request->time)) : date("Y-m-d H:i:s"),
         ]);
         event(new TicketEvent($request->departament_id));
-        return $this->returnSuccess(200,  $ticket->load('client')->load('departament'));
+        $mail = $this->sendMail($ticket->load('client')->load('departament'));
+        return $this->returnSuccess(200,  [ 'ticket' => $ticket->load('client')->load('departament'), 'datamail' => $mail]);
     }
     public function deleteTicket($ticketId){
 
@@ -151,5 +155,20 @@ class TicketController extends Controller
         return $departament->limit == 0 
         ?  false
         : $departament->limit <= $tickes;
+    }
+    private function sendMail($data){
+       if(!$data->client->email) return;
+        try {
+            $mail = Mail::send('emails.ticketEmail',[], function ($message) use ($data) {
+                $message->from('notifications@gestionc.victicodedev.com', 'Gestion C');
+                $message->to($data->client->email)->subject('Tu ticket creado con exito');
+            });
+        } catch (Exception $th) {
+            //throw $th;
+            return $th->getMessage();
+        }
+        
+        return $mail;
+        
     }
 }

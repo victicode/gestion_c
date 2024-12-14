@@ -106,7 +106,7 @@
       ticketStore.createTicketPublic(dataForTicket.value)
       .then((response) => {
         if(response.code !== 200) throw response
-        ticket.value = response.data;
+        ticket.value = response.data.ticket;
         loading.value = false;
         step.value = 3;
       })

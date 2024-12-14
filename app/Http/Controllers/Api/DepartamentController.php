@@ -37,7 +37,7 @@ class DepartamentController extends Controller
             array_push($format,[
                 'id'        =>  $key->id,
                 'name'      =>  $key->name,
-                'disable'  =>  $key->limit == 0 ? false : $key->limit == $key->tickets_atending_count,
+                'disable'   =>  $key->limit == 0 ? false : $key->limit == $key->tickets_atending_count,
             ]);
         }
         return $format;
