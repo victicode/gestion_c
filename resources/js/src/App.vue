@@ -142,7 +142,10 @@ export default defineComponent({
   cursor: pointer;
 }
 .app-layout {
-  background: $primary !important;
+  // background: $primary !important;
+  // background: linear-gradient(171deg, rgba(16,149,12,1) 30%, rgba(1,80,0,1) 86%);
+  background: #087006;
+
   &::before{
     background-image: url('https://gestionc.victicodedev.com/public/images/logo/logo.svg');
     content: '';

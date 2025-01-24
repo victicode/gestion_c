@@ -1,79 +1,86 @@
 <template>
-  <div v-if="departaments.length > 0" class="h-100 displayContent">
-    <transition name="fadex">
-      <div v-if="show == 1" class="departamentGroup">
-        <div v-for="departament in departaments1" :key="departament.id" style="width:93%!important;"  >
-          <div class="displayDepartament__content">
-            <div class="departament__name">
-              <div class="mb-0 text-center text__d" >
-              {{ departament.name }}
-              </div>
-            </div>
-            <div class="departament__ticket">
-              <n-h1 class="text-bold mb-0 text__ticket" > 
-                {{ departament.current_ticket ? departament.current_ticket.number : '---' }}
-              </n-h1>
-            </div>
-            
-          </div>
-        </div>
+  <div class="h-100">
+    <div style="height: 10%; overflow: hidden; width:91%!important;">
+      <div class="text-center mt-1 " style="font-size: 3.8rem; line-height: 1; padding: 1rem 0px;  background: darkgray; color: white;">
+        TURNO
       </div>
-    </transition>        
-    <transition name="fadex">
-      <div v-if="show == 2" class="departamentGroup">
-        <div v-for="departament in departaments2" :key="departament.id" style="width:93%!important; "   >
-          <div class="displayDepartament__content">
-            <div class="departament__name">
-              <div class="mb-0 text-center text__d" >
-              {{ departament.name }}
+    </div>
+    <div v-if="departaments.length > 0" class=" displayContent">
+      <transition name="fadex">
+        <div v-if="show == 1" class="departamentGroup">
+          <div v-for="departament in departaments1" :key="departament.id" style="width:91%!important; height: 25%;"  >
+            <div class="displayDepartament__content">
+              <div class="departament__name">
+                <div class="mb-0 text-center text__d" >
+                {{ departament.name }}
+                </div>
               </div>
-            </div>
-            <div class="departament__ticket">
-              <n-h1 class="text-bold mb-0 text__ticket" > 
-                {{ departament.current_ticket ? departament.current_ticket.number : '---' }}
-              </n-h1>
-            </div>
-            
-          </div>
-        </div>
-      </div>
-    </transition>    
-    <transition name="fadex">
-      <div v-if="show == 3" class="departamentGroup">
-        <div v-for="departament in departaments3" :key="departament.id" style="width:93%!important; "  class="" >
-          <div class="displayDepartament__content">
-            <div class="departament__name">
-              <div class="mb-0 text-center text__d" style="" >
-              {{ departament.name }}
+              <div class="departament__ticket">
+                <n-h1 class="text-bold mb-0 text__ticket text-center" > 
+                  {{ departament.current_ticket ? departament.current_ticket.number : '---' }}
+                </n-h1>
               </div>
-            </div>
-            <div class="departament__ticket">
-              <n-h1 class="text-bold mb-0 text__ticket" > 
-                {{ departament.current_ticket ? departament.current_ticket.number : '---' }}
-              </n-h1>
+              
             </div>
           </div>
         </div>
-      </div>
-    </transition>      
-    <transition name="fadex">
-      <div v-if="show == 4" class="departamentGroup">
-        <div v-for="departament in departaments4" :key="departament.id" style="width:93%!important; "  class="" >
-          <div class="displayDepartament__content">
-            <div class="departament__name">
-              <div class="mb-0 text-center text__d" >
-              {{ departament.name }}
+      </transition>        
+      <transition name="fadex">
+        <div v-if="show == 2" class="departamentGroup">
+          <div v-for="departament in departaments2" :key="departament.id" style="width:91%!important; height: 25%; "   >
+            <div class="displayDepartament__content">
+              <div class="departament__name">
+                <div class="mb-0 text-center text__d" >
+                {{ departament.name }}
+                </div>
               </div>
-            </div>
-            <div class="departament__ticket">
-              <n-h1 class="text-bold mb-0 text__ticket" > 
-                {{ departament.current_ticket ? departament.current_ticket.number : '---' }}
-              </n-h1>
+              <div class="departament__ticket">
+                <n-h1 class="text-bold mb-0 text__ticket" > 
+                  {{ departament.current_ticket ? departament.current_ticket.number : '---' }}
+                </n-h1>
+              </div>
+              
             </div>
           </div>
         </div>
-      </div>
-    </transition>        
+      </transition>    
+      <transition name="fadex">
+        <div v-if="show == 3" class="departamentGroup">
+          <div v-for="departament in departaments3" :key="departament.id" style="width:91%!important; height: 25%; "  class="" >
+            <div class="displayDepartament__content">
+              <div class="departament__name">
+                <div class="mb-0 text-center text__d" style="" >
+                {{ departament.name }}
+                </div>
+              </div>
+              <div class="departament__ticket">
+                <n-h1 class="text-bold mb-0 text__ticket" > 
+                  {{ departament.current_ticket ? departament.current_ticket.number : '---' }}
+                </n-h1>
+              </div>
+            </div>
+          </div>
+        </div>
+      </transition>      
+      <transition name="fadex">
+        <div v-if="show == 4" class="departamentGroup">
+          <div v-for="departament in departaments4" :key="departament.id" style="width:91%!important; height: 25%; "  class="" >
+            <div class="displayDepartament__content">
+              <div class="departament__name">
+                <div class="mb-0 text-center text__d" >
+                {{ departament.name }}
+                </div>
+              </div>
+              <div class="departament__ticket">
+                <n-h1 class="text-bold mb-0 text__ticket" > 
+                  {{ departament.current_ticket ? departament.current_ticket.number : '---' }}
+                </n-h1>
+              </div>
+            </div>
+          </div>
+        </div>
+      </transition>        
+    </div>
   </div>
 </template>
 <script>
@@ -136,7 +143,7 @@
           }
           show.value++
           return
-        },8000)
+        },800000000)
       }
       
       onMounted(() => {
@@ -165,25 +172,34 @@
 </script>
 <style lang="scss">
 .departament__ticket{
-  padding: 1.3rem 0.5rem;
+  padding: 1.3rem 2rem;
+  box-shadow:0px 10px 10px 0px rgba(0, 0, 0, 0.151) ;
+  width: calc(100% - 2rem);
+  border-bottom-left-radius: 5rem;
+  border-bottom-right-radius: 1.5rem;
+  position: relative;
+  height: 70%;
+  background: white;
+  margin-left: 2rem;
   & .text__ticket{
-    font-size: 4.1rem; line-height: 1.05
+    text-align: center;
+    font-size: 4.2rem; 
   }
 }
 
 .departament__name{
-  background: rgb(19, 82, 0);
+  height: 30%;
+  background: rgb(15, 61, 1);
   color: white;
   width: 100%;
-  border-top-left-radius: 0px;
-  border-top-right-radius: 0px;
+  border-top-right-radius: 10px;
   padding: 0.5rem 0.8rem;
   & .text__d{
-    font-size: 1.7rem; overflow: hidden; white-space: nowrap;text-overflow: ellipsis; 
+    font-size: 1.9rem; overflow: hidden; white-space: nowrap;text-overflow: ellipsis; 
   }
 }
 .displayContent{
-  width: 100%; padding: 0.8rem 0px; padding-bottom: 1.5rem; overflow: hidden
+  width: 100%; padding-top: 0.7rem ;  overflow: hidden; height: 90%;
 }
 .departamentGroup{
   display: flex; justify-content: space-between; flex-direction: column; height: 100%;
@@ -196,14 +212,17 @@
 }
 
 .displayDepartament__content{
+    height: 92%;
     display:flex;
     justify-content: space-between;
     flex-direction: column;
     align-items: center;
-    background: white;
+    background: transparent;
     cursor: pointer;
-    border-radius: 0px;
-    box-shadow:0px 2px 5px 0px rgba(0, 0, 0, 0.747) ;
+    border-bottom-right-radius: 10px;
+    border-top-right-radius: 10px;
+
+    
     font-weight: 500;
     position:relative;
     transition: all 0.4s ease;
@@ -217,14 +236,8 @@
     .n-h6 { 
       transition: all 0.4s ease;
     }
-    &:hover{
-      background: #7a7a7a;
-      & .n-h6{
-        color: white,
-      }
-    }
     &:active{
-      background: #7a7a7a;
+      // background: #7a7a7a;
       transform: scale(0.8);
       & .n-h6{
         color: white,
